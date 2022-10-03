@@ -29,7 +29,7 @@ namespace ForestBrush
             }
         }
 
-        private ToggleButtonComponents toggleButtonComponents;
+        private ToggleButtonComponents? toggleButtonComponents;
 
         private TreeInfo container;
         internal TreeInfo Container
@@ -57,14 +57,11 @@ namespace ForestBrush
 
         public Dictionary<string, string> TreeAuthors { get; private set; }
 
-        public ForestBrushTool BrushTool { get; private set; }
+        public ForestBrushTool? BrushTool { get; private set; }
 
         public UIButton ToggleButton => toggleButtonComponents.ToggleButton;
 
-        public Dictionary<uint, Precision.Data> PrecisionData => Precision.data;
-        public HashSet<uint> GrowStateData => GrowState.data;
-
-        internal ForestBrushPanel ForestBrushPanel { get; private set; }
+        internal ForestBrushPanel? ForestBrushPanel { get; private set; }
 
         internal bool Initialized;
 
@@ -88,9 +85,31 @@ namespace ForestBrush
             if (tabstrip != null)
             {
                 toggleButtonComponents = CreateToggleButtonComponents(tabstrip);
-                ForestBrushPanel = toggleButtonComponents.TabStripPage.GetComponent<UIPanel>().AddUIComponent<ForestBrushPanel>();
+                if (toggleButtonComponents != null)
+                {
+                    ForestBrushPanel = toggleButtonComponents.TabStripPage.GetComponent<UIPanel>().AddUIComponent<ForestBrushPanel>();
+                }
+                else
+                {
+                    Debug.Log("toggleButtonComponents is null.");
+                }
+
                 BrushTool = gameObject.AddComponent<ForestBrushTool>();
-                BrushTool.UpdateTool(UserMod.Settings.SelectedBrush.Name);
+                if (BrushTool != null)
+                {
+                    if (UserMod.Settings.SelectedBrush != null)
+                    {
+                        BrushTool.UpdateTool(UserMod.Settings.SelectedBrush.Name);
+                    }
+                    else
+                    {
+                        Debug.Log("UserMod.Settings.SelectedBrush is null");
+                    }
+                }
+                else
+                {
+                    Debug.Log("BrushTool is null");
+                }
             }
         }
 
@@ -100,12 +119,17 @@ namespace ForestBrush
             LoadTreeAuthors();
             AddToolButton();
 
-            toggleButtonComponents.ToggleButton.eventClick += OnToggleClick;
-            ForestBrushPanel.eventVisibilityChanged += OnForestBrushPanelVisibilityChanged;
+            if (toggleButtonComponents != null)
+            {
+                toggleButtonComponents.ToggleButton.eventClick += OnToggleClick;
+            }
+            if (ForestBrushPanel != null)
+            {
+                ForestBrushPanel.eventVisibilityChanged += OnForestBrushPanelVisibilityChanged;
+            }
+            
             LocaleManager.eventLocaleChanged += SetTutorialLocale;
-
             Tool = ForestTool.AddSelectionTool();
-
             Initialized = true;
         }
 
@@ -132,23 +156,30 @@ namespace ForestBrush
             GameObject tabStripPage = UITemplateManager.GetAsGameObject(kEmptyContainer);
             GameObject mainToolbarButtonTemplate = UITemplateManager.GetAsGameObject(kMainToolbarButtonTemplate);
 
-            UIButton toggleButton = tabstrip.AddTab(kToggleButton, mainToolbarButtonTemplate, tabStripPage, new Type[0]) as UIButton;
-            toggleButton.atlas = Resources.ResourceLoader.ForestBrushAtlas;
+            UIButton? toggleButton = tabstrip.AddTab(kToggleButton, mainToolbarButtonTemplate, tabStripPage, new Type[0]) as UIButton;
+            if (toggleButton != null)
+            {
+                toggleButton.atlas = Resources.ResourceLoader.ForestBrushAtlas;
 
-            toggleButton.normalFgSprite = "ForestBrushNormal";
-            toggleButton.disabledFgSprite = "ForestBrushDisabled";
-            toggleButton.focusedFgSprite = "ForestBrushFocused";
-            toggleButton.hoveredFgSprite = "ForestBrushHovered";
-            toggleButton.pressedFgSprite = "ForestBrushPressed";
+                toggleButton.normalFgSprite = "ForestBrushNormal";
+                toggleButton.disabledFgSprite = "ForestBrushDisabled";
+                toggleButton.focusedFgSprite = "ForestBrushFocused";
+                toggleButton.hoveredFgSprite = "ForestBrushHovered";
+                toggleButton.pressedFgSprite = "ForestBrushPressed";
 
-            toggleButton.normalBgSprite = "ToolbarIconGroup6Normal";
-            toggleButton.disabledBgSprite = "ToolbarIconGroup6Disabled";
-            toggleButton.focusedBgSprite = "ToolbarIconGroup6Focused";
-            toggleButton.hoveredBgSprite = "ToolbarIconGroup6Hovered";
-            toggleButton.pressedBgSprite = "ToolbarIconGroup6Pressed";
-            toggleButton.parent.height = 1f;
+                toggleButton.normalBgSprite = "ToolbarIconGroup6Normal";
+                toggleButton.disabledBgSprite = "ToolbarIconGroup6Disabled";
+                toggleButton.focusedBgSprite = "ToolbarIconGroup6Focused";
+                toggleButton.hoveredBgSprite = "ToolbarIconGroup6Hovered";
+                toggleButton.pressedBgSprite = "ToolbarIconGroup6Pressed";
+                toggleButton.parent.height = 1f;
 
-            IncrementObjectIndex();
+                IncrementObjectIndex();
+            }
+            else
+            {
+                Debug.Log("toggleButton is null.");
+            }
 
             SeparatorComponents postSeparatorComponents = CreateSeparatorComponents(tabstrip);
 

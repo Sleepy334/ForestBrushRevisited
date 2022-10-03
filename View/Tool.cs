@@ -361,7 +361,6 @@ namespace ForestBrush
                 }
                 if (success) {
                     if (TreeManager.instance.CreateTree(out uint tree, ref Randomizer, treeInfo, MousePosition, true)) {
-                        if (anarchy) GrowState.data.Add(tree);
                         if (UserMod.Settings.PlayEffect) TreeTool.DispatchPlacementEffect(MousePosition, false);
                     }
                 }

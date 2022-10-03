@@ -28,7 +28,7 @@ namespace ForestBrush
                         }
 
                         if (Persistence.Precision.data.ContainsKey(index)) {
-                            Persistence.Precision.Data precisionData = (Persistence.Precision.Data)Persistence.Precision.data[index];
+                            Persistence.Precision.Data precisionData = Persistence.Precision.data[index];
 
                             if (tree->m_posX > 0) {
                                 result.x = ((float)tree->m_posX + (float)precisionData.x / (float)ushort.MaxValue) * 0.263671875f;
@@ -63,6 +63,8 @@ namespace ForestBrush
                         tree->m_posX = (short)Mathf.Clamp((int)(value.x * 3.79259253f), -32767, 32767);
                         tree->m_posZ = (short)Mathf.Clamp((int)(value.z * 3.79259253f), -32767, 32767);
                         tree->m_posY = (ushort)Mathf.Clamp(Mathf.RoundToInt(value.y * 64f), 0, 65535);
+
+                        // Update precision data for this tree
                         Persistence.Precision.Data precisionData = new Persistence.Precision.Data();
                         precisionData.x = (ushort)(ushort.MaxValue * Mathf.Abs(value.x * 3.79259253f - (float)tree->m_posX));
                         precisionData.z = (ushort)(ushort.MaxValue * Mathf.Abs(value.z * 3.79259253f - (float)tree->m_posZ));

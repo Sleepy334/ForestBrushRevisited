@@ -2,7 +2,7 @@
 <Language UniqueName="en" ReadableName="English" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2009/XMLSchema/XMLSchema.xsd">
   <Translations>
     <Translation ID="FOREST-BRUSH-MODDESCRIPTION" String="Lets you create, edit, and save mixed tree brushes." />
-    <Translation ID="FOREST-BRUSH-MODNAME" String="Forest Brush" />
+    <Translation ID="FOREST-BRUSH-MODNAME" String="Forest Brush Revisited" />
     <Translation ID="FOREST-BRUSH-BRUSH" String="Brush" />
     <Translation ID="FOREST-BRUSH-SELECT" String="Select brush" />
     <Translation ID="FOREST-BRUSH-CREATE" String="Create new brush" />

@@ -4,7 +4,6 @@ using ColossalFramework.UI;
 using ForestBrush.Persistence;
 using ForestBrush.Redirection;
 using ForestBrush.TranslationFramework;
-using HarmonyLib;
 using ICities;
 using System;
 using System.Collections.Generic;
@@ -15,8 +14,8 @@ namespace ForestBrush
 {
     public class UserMod : LoadingExtensionBase, IUserMod
     {
-        public static string Version = "v1.3.3";
-        public static string Title => "Forest Brush " + Version;
+        public static string Version = "v1.3.5";
+        public static string Title => Translation.Instance.GetTranslation("FOREST-BRUSH-MODNAME") + " " + Version;
 
         public static XmlPersistenceService XmlPersistenceService { get; private set; }
         private static GameObject? s_forestBrushGameObject = null;
@@ -28,8 +27,6 @@ namespace ForestBrush
 
         private UIDropDown searchLogic;
         private UIDropDown newBrushBehaviour;
-        //private HarmonyInstance Harmony { get; set; }
-        private const string HarmonyID = "Sleepy.forestbrush";
 
         public static bool IsLoaded() { return modInstalled; }
 
@@ -74,7 +71,6 @@ namespace ForestBrush
             }
 
             UninstallOutOfGameDependencies();
-            Unpatch();
         }
 
         public static bool IsGame = LoadMode == LoadMode.LoadGame || LoadMode == LoadMode.NewGame || LoadMode == LoadMode.NewGameFromScenario;
@@ -120,21 +116,9 @@ namespace ForestBrush
         }
 
         private void Patch() {
-            if (DependencyUtilities.IsHarmonyRunning() && !IsModEnabled(593588108UL, "Prop & Tree Anarchy"))
-            {
-                var harmony = new Harmony(HarmonyID);
-                harmony.PatchAll(Assembly.GetExecutingAssembly());
-            }
-
             if (!IsModEnabled(1873351912UL, "Tree Precision")) {
                 Redirector<PositionDetour>.Deploy();
             }
-        }
-
-        private void Unpatch() {
-            Redirector<PositionDetour>.Revert();
-            var harmony = new Harmony(HarmonyID);
-            harmony.UnpatchAll(HarmonyID);
         }
 
         void InstallMod()
@@ -147,21 +131,6 @@ namespace ForestBrush
 
             if (!IsGame && !IsMap && !IsTheme)
             {
-                return;
-            }
-
-            if (DependencyUtilities.IsHarmonyRunning())
-            {
-                Patch();
-            }
-            else
-            {
-                string sMessage = "Mod Dependency Error:\r\n";
-                sMessage += "\r\n";
-                sMessage += "Harmony not found.\r\n";
-                sMessage += "\r\n";
-                sMessage += "Mod disabled until dependencies resolved, please subscribe to Harmony.";
-                Prompt.Info(Title, sMessage);
                 return;
             }
 

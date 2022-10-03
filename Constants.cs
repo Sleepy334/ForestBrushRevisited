@@ -4,7 +4,7 @@ namespace ForestBrush
 {
     public class Constants
     {
-        public static readonly string ModName = "Forest Brush";
+        public static readonly string ModName = "Forest Brush Revisited " + UserMod.Version;
 
         public static readonly string NewBrushName = "New Brush";
 
