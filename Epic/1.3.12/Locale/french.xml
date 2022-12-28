@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language UniqueName="fr" ReadableName="Français" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2009/XMLSchema/XMLSchema.xsd">
+  <Translations>
+    <Translation ID="FOREST-BRUSH-MODDESCRIPTION" String="Il vous permet de créer, éditer et d'enregistrer des arbes mélangés à l'aide d'un pinceau." />
+    <Translation ID="FOREST-BRUSH-MODNAME" String="Pinceau de Forêt" />
+    <Translation ID="FOREST-BRUSH-BRUSH" String="Pinceau" />
+    <Translation ID="FOREST-BRUSH-SELECT" String="Sélectionnez le pinceau" />
+    <Translation ID="FOREST-BRUSH-CREATE" String="Créer un nouveau pinceau" />
+    <Translation ID="FOREST-BRUSH-DELETE" String="Supprimer le pinceau actuel" />
+    <Translation ID="FOREST-BRUSH-SEARCH" String="Rechercher" />
+    <Translation ID="FOREST-BRUSH-PROBABILITY" String="Probabilité" />
+    <Translation ID="FOREST-BRUSH-TOGGLE-EDIT" String="Basculer vers le panneau 'Arbres'" />
+    <Translation ID="FOREST-BRUSH-TOGGLE-OPTIONS" String="Basculer vers le panneau 'Option de pinceau'" />
+    <Translation ID="FOREST-BRUSH-TOGGLE-SELECTBRUSHSHAPE" String="Basculer ver le panneau 'Formes de pinceau'" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-STRENGTH" String="Force de dureté" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-DENSITY" String="Densité" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-SIZE" String="Taille" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-AUTODENSITY" String="Densité automatique" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-RESET" String="Réinitialiser" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-RESET" String="Réinitialiser toutes les options aux valeurs par défaut" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SHOWMESHDATA" String="Afficher les données chaînées et de texture de l'arborescence dans l'info-bulle" />
+    <Translation ID="FOREST-BRUSH-DATA-NAME" String="Nom" />
+    <Translation ID="FOREST-BRUSH-DATA-AUTHOR" String="Auteur" />
+    <Translation ID="FOREST-BRUSH-DATA-MESH" String="Chaînage" />
+    <Translation ID="FOREST-BRUSH-DATA-MESHNOTREADABLE" String="Illisible" />
+    <Translation ID="FOREST-BRUSH-DATA-TRIANGLES" String="Triangles" />
+    <Translation ID="FOREST-BRUSH-DATA-TEXTURE" String="Texture" />
+    <Translation ID="FOREST-BRUSH-DATA-PIXELS" String="px" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING" String="Trier les arbres par" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-ORDER" String="Ordre de tri" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-ASCENDING" String="Ascendant" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-DESCENDING" String="Descendant" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-LOGIC" String="Recherche logique" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-AND" String="ET (Match les deux mots)" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-OR" String="OU (Correspond à l'un ou l'autre mot)" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-SIMPLE" String="Simple (Recherche rapide 'Nom de l'arbre uniquement')" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH" String="Lors de la création d'un nouveau pinceau" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH-CLEAR" String="Commencez avec un pinceau vide" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH-KEEP" String="Gardez les arbres du dernier pinceau sélectionné" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-IGNORE-VANILLA" String="Cacher les arbres du jeu Vanilla" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SINGLETREE-EFFECT" String="Effets visuels et sonores en plaçant les arbres individuellement" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-CHARGE-MONEY" String="Charge de l'argent pour placer les arbres" />
+    <Translation ID="FOREST-BRUSH-MODAL-WARNING" String="Attention" />
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-TITLE" String="Limite d'arbre atteinte" />
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ONE" String="Vous avez atteint la limite de 100 arbres pour ce pinceau. Supprimez quelques arbres pour en ajouter." />
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ALL" String="Vous avez atteint la limite de 100 arbres pour ce pinceau. Certains arbres n'ont pas été ajoutés. S'il vous plaît supprimer des arbres pour en ajouter plus." />
+    <Translation ID="FOREST-BRUSH-PROMPT-NEW" String="Nom du pinceau" />
+    <Translation ID="FOREST-BRUSH-RENAME-BRUSH" String="Utilisez ce champ de texte pour renommer le pinceau actuel." />
+    <Translation ID="FOREST-BRUSH-PROMPT-DELETE" String="Êtes-vous sûr de vouloir supprimer définitivement ce pinceau ?" />
+    <Translation ID="FOREST-BRUSH-RENAME-ERROR" String="Un autre pinceau existe déjà avec ce nom." />
+    <Translation ID="FOREST-BRUSH-PROMPT-YES" String="Oui" />
+    <Translation ID="FOREST-BRUSH-PROMPT-NO" String="Non" />
+    <Translation ID="FOREST-BRUSH-PROMPT-OK" String="OK" />
+    <Translation ID="FOREST-BRUSH-PROMPT-CANCEL" String="Annuler" />
+    <Translation ID="FOREST-BRUSH-KEYBIND-TOGGLE-TOOL" String="Basculer ver le panneau du pinceau de Forêt" />
+    <Translation ID="FOREST-BRUSH-TOOLERROR-BRUSHEMPTY" String="Pas d'arbres dans le piceau" />
+    <Translation ID="FOREST-BRUSH-TUTORIAL" String="
+Merci de vous être abonné à Forest Brush.&#10;&#10;
+Cliquez sur le bouton 'Arbres' pour sélectionner les arbres pour votre pinceau.&#10;
+Utilisez les cases à cocher pour ajouter / supprimer des arbres au pinceau.&#10;
+CTRL + click sur une case à cocher pour sélectionner / désélectionner tous les arbres.&#10;&#10;
+Vous pouvez avoir autant de pinceaux que vous le souhaitez, il suffit d’en ajouter d’autres avec le bouton 'plus'.&#10;&#10;
+Utilisez le champ de recherche pour trouver des arbres spécifiques.&#10;&#10;
+Cliquez sur le bouton 'Gear' pour modifier les paramètres de votre pinceau.&#10;
+Ici, vous pouvez changer la taille, la force et la densité de votre pinceau.&#10;
+Visitez la page du Workshop du mod pour des instructions détaillées." />
+  </Translations>
+</Language>
