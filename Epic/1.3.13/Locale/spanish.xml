@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language UniqueName="es" ReadableName="Español" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2009/XMLSchema/XMLSchema.xsd">
+  <Translations>
+    <Translation ID="FOREST-BRUSH-MODDESCRIPTION" String="Te permite crear, guardar y editar 'pinceles' con arboles mixtos." />
+    <Translation ID="FOREST-BRUSH-MODNAME" String="Forest Brush" />
+    <Translation ID="FOREST-BRUSH-BRUSH" String="Pincel" />
+    <Translation ID="FOREST-BRUSH-SELECT" String="Selecciona pincel" />
+    <Translation ID="FOREST-BRUSH-CREATE" String="Crea nuevo pincel" />
+    <Translation ID="FOREST-BRUSH-DELETE" String="Borra pincel" />
+    <Translation ID="FOREST-BRUSH-SEARCH" String="Busca" />
+    <Translation ID="FOREST-BRUSH-PROBABILITY" String="Probabilidad" />
+    <Translation ID="FOREST-BRUSH-TOGGLE-EDIT" String="Muestra/Esconde el panel 'Árboles'" />
+    <Translation ID="FOREST-BRUSH-TOGGLE-OPTIONS" String="Muestra/Esconde el panel 'Opciones de Pincel'" />
+    <Translation ID="FOREST-BRUSH-TOGGLE-SELECTBRUSHSHAPE" String="Muestra/Esconde el panel 'Formas del Pincel'" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-STRENGTH" String="Fuerza" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-DENSITY" String="Densidad" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-SIZE" String="Tamaño" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-AUTODENSITY" String="Auto-densidad" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-RESET" String="Reinicia" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-RESET" String="Reinicia las opciones predeterminadas" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SHOWMESHDATA" String="Mostrar informacion sobre malla y textura" />
+    <Translation ID="FOREST-BRUSH-DATA-NAME" String="Nombre" />
+    <Translation ID="FOREST-BRUSH-DATA-AUTHOR" String="Autor" />
+    <Translation ID="FOREST-BRUSH-DATA-MESH" String="Malla" />
+    <Translation ID="FOREST-BRUSH-DATA-MESHNOTREADABLE" String="Ilegible" />
+    <Translation ID="FOREST-BRUSH-DATA-TRIANGLES" String="Triangulos" />
+    <Translation ID="FOREST-BRUSH-DATA-TEXTURE" String="Textura" />
+    <Translation ID="FOREST-BRUSH-DATA-PIXELS" String="px" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING" String="Ordenar lista de árboles por" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-ORDER" String="Orden de la lista" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-ASCENDING" String="Ascendente" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-DESCENDING" String="Descendiente" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-LOGIC" String="Lógica de búsqueda" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-AND" String="AND (Contiene ambos términos)" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-OR" String="OR (Contiene cualquier término)" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-SIMPLE" String="Simple (Busca rapida solo de los nombres)" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH" String="Al crear un nuevo pincel" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH-CLEAR" String="Remueve los árboles del pincel anterior" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH-KEEP" String="Mantén los árboles del pincel anterior" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-IGNORE-VANILLA" String="Oculta los árboles 'vanilla'" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SINGLETREE-EFFECT" String="Reproduce los efectos audiovisuales al colocar árboles individualmente " />
+    <Translation ID="FOREST-BRUSH-OPTIONS-CHARGE-MONEY" String="Cobrar dinero para sembrar árboles" />
+    <Translation ID="FOREST-BRUSH-MODAL-WARNING" String="Advertencia" />
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-TITLE" String="Limite de árboles alcanzado" />
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ONE" String="Haz alcanzado el limite de 100 arboles por pincel. Porfavor remueve algunos árboles para agregar más." />
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ALL" String="Haz alcanzado el limite de 100 arboles por pincel. Algunos árboles no fueron agregados. Porfavor remueve algunos árboles para agregar más." />
+    <Translation ID="FOREST-BRUSH-PROMPT-NEW" String="Nombre del pincel" />
+    <Translation ID="FOREST-BRUSH-RENAME-BRUSH" String="Usa este campo para renombrar el pincel" />
+    <Translation ID="FOREST-BRUSH-PROMPT-DELETE" String="Deseas realmente eliminar este pincel?" />
+    <Translation ID="FOREST-BRUSH-RENAME-ERROR" String="Otro pincel existe con el mismo nombre" />
+    <Translation ID="FOREST-BRUSH-PROMPT-YES" String="Si" />
+    <Translation ID="FOREST-BRUSH-PROMPT-NO" String="No" />
+    <Translation ID="FOREST-BRUSH-PROMPT-OK" String="OK" />
+    <Translation ID="FOREST-BRUSH-PROMPT-CANCEL" String="Regresar" />
+    <Translation ID="FOREST-BRUSH-KEYBIND-TOGGLE-TOOL" String="Muestra/Esconde el panel de 'Forest Brush'" />
+    <Translation ID="FOREST-BRUSH-TOOLERROR-BRUSHEMPTY" String="No hay árboles en el picel" />
+    <Translation ID="FOREST-BRUSH-TUTORIAL" String="
+Gracias por descargar Forest Brush.&#10;&#10;
+Haz click en el botón 'Árboles' para agregar árboles al pincel.&#10;
+Usa las casillas para agregar/remover árboles.&#10;
+CTRL + click sobre cualquier casilla para agregar/remover todos los árboles.&#10;&#10;
+Puedes tener tantos pinceles como desees, simplemente presiona el botón '+'.&#10;&#10;
+Usa el campo de busqueda para encontrar un árbol específico.&#10;&#10;
+Haz click en el botón 'Engranaje' para cambiar opciones.&#10;
+Allí puedes cambiar el tamaño, fuerza y densidad del pincel.&#10;
+Visita la pagina del mod para más información." />
+  </Translations>
+</Language>
