@@ -1,0 +1,139 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net35</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>False</Deterministic>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Configurations>Debug;Release;TEST Release;TEST Debug</Configurations>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+    <NoWarn>1701;1702;8600;8602;8604;8618;8625</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TEST Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+    <NoWarn>1701;1702;8600;8602;8604;8618;8625</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>True</Optimize>
+    <NoWarn>1701;1702;8600;8602;8604;8618;8625</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TEST Release|AnyCPU'">
+    <Optimize>True</Optimize>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <NoWarn>1701;1702;8600;8602;8604;8618;8625</NoWarn>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <None Remove="Resources\Brush icon.png" />
+    <None Remove="Resources\Brushes\01.png" />
+    <None Remove="Resources\Brushes\02.png" />
+    <None Remove="Resources\Brushes\03.png" />
+    <None Remove="Resources\Brushes\04.png" />
+    <None Remove="Resources\Brushes\05.png" />
+    <None Remove="Resources\Brushes\06.png" />
+    <None Remove="Resources\Brushes\07.png" />
+    <None Remove="Resources\Brushes\08.png" />
+    <None Remove="Resources\Brushes\09.png" />
+    <None Remove="Resources\Brushes\10.png" />
+    <None Remove="Resources\Brushes\11.png" />
+    <None Remove="Resources\Brushes\12.png" />
+    <None Remove="Resources\BrushIcon.png" />
+    <None Remove="Resources\forestbrush" />
+    <None Remove="Resources\ForestBrushFocused.png" />
+    <None Remove="Resources\ForestBrushHovered.png" />
+    <None Remove="Resources\forestbrushlinux" />
+    <None Remove="Resources\forestbrushmac" />
+    <None Remove="Resources\ForestBrushNormal.png" />
+    <None Remove="Resources\ForestBrushPressed.png" />
+    <None Remove="Resources\OptionsDropbox.png" />
+    <None Remove="Resources\OptionsDropboxFocused.png" />
+    <None Remove="Resources\OptionsDropboxHovered.png" />
+    <None Remove="Resources\OptionsDropboxPressed.png" />
+    <None Remove="Resources\PaintBrushFocused.png" />
+    <None Remove="Resources\PaintBrushHovered.png" />
+    <None Remove="Resources\PaintBrushNormal.png" />
+    <None Remove="Resources\PaintBrushPressed.png" />
+    <None Remove="Resources\SelectFilter.png" />
+    <None Remove="Resources\SettingsDropbox.png" />
+    <None Remove="Resources\SettingsDropboxFocused.png" />
+    <None Remove="Resources\SettingsDropboxHovered.png" />
+    <None Remove="Resources\SettingsDropboxPressed.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Brushes\01.png" />
+    <Content Include="Resources\Brushes\02.png" />
+    <Content Include="Resources\Brushes\03.png" />
+    <Content Include="Resources\Brushes\04.png" />
+    <Content Include="Resources\Brushes\05.png" />
+    <Content Include="Resources\Brushes\06.png" />
+    <Content Include="Resources\Brushes\07.png" />
+    <Content Include="Resources\Brushes\08.png" />
+    <Content Include="Resources\Brushes\09.png" />
+    <Content Include="Resources\Brushes\10.png" />
+    <Content Include="Resources\Brushes\11.png" />
+    <Content Include="Resources\Brushes\12.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BrushIcon.png" />
+    <EmbeddedResource Include="Resources\forestbrush" />
+    <EmbeddedResource Include="Resources\ForestBrushFocused.png" />
+    <EmbeddedResource Include="Resources\ForestBrushHovered.png" />
+    <EmbeddedResource Include="Resources\forestbrushlinux" />
+    <EmbeddedResource Include="Resources\forestbrushmac" />
+    <EmbeddedResource Include="Resources\ForestBrushNormal.png" />
+    <EmbeddedResource Include="Resources\ForestBrushPressed.png" />
+    <EmbeddedResource Include="Resources\OptionsDropbox.png" />
+    <EmbeddedResource Include="Resources\OptionsDropboxFocused.png" />
+    <EmbeddedResource Include="Resources\OptionsDropboxHovered.png" />
+    <EmbeddedResource Include="Resources\OptionsDropboxPressed.png" />
+    <EmbeddedResource Include="Resources\PaintBrushFocused.png" />
+    <EmbeddedResource Include="Resources\PaintBrushHovered.png" />
+    <EmbeddedResource Include="Resources\PaintBrushNormal.png" />
+    <EmbeddedResource Include="Resources\PaintBrushPressed.png" />
+    <EmbeddedResource Include="Resources\SelectFilter.png" />
+    <EmbeddedResource Include="Resources\SettingsDropbox.png" />
+    <EmbeddedResource Include="Resources\SettingsDropboxFocused.png" />
+    <EmbeddedResource Include="Resources\SettingsDropboxHovered.png" />
+    <EmbeddedResource Include="Resources\SettingsDropboxPressed.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="CitiesHarmony.Harmony">
+      <HintPath>..\..\References\CitiesHarmony.Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="ColossalManaged">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\ColossalManaged.dll</HintPath>
+    </Reference>
+    <Reference Include="ICities">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\ICities.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)&quot;&#xA;del &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)\$(TargetFileName)&quot;&#xA;xcopy /y &quot;$(TargetPath)&quot; &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)&quot;&#xA;mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Locale&quot;&#xA;xcopy /y &quot;$(ProjectDir)\Locale&quot; &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Locale&quot; /s /e&#xD;&#xA;mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Resources&quot;&#xD;&#xA;mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Resources\Brushes&quot;&#xA;xcopy /y &quot;$(ProjectDir)\Resources\Brushes&quot; &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Resources\Brushes&quot; /s /e" />
+  </Target>
+
+</Project>
