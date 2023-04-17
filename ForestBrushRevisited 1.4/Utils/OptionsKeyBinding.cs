@@ -128,7 +128,7 @@ namespace ForestBrushRevisited
                 UITextComponent uITextComponent = p.source as UITextComponent;
                 uITextComponent.text = this.m_EditingBinding.ToLocalizedString("KEYNAME");
 
-                ModSettings.SaveSettings();
+                ModSettings.Settings.Save();
 
                 this.m_EditingBinding = null;
                 this.m_EditingBindingCategory = string.Empty;

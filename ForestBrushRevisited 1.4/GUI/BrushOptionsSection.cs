@@ -7,8 +7,6 @@ namespace ForestBrushRevisited.GUI
 {
     public class BrushOptionsSection : UIPanel
     {
-        ForestBrushPanel owner;
-
         UIPanel layoutPanelSize;
         UILabel sizeLabel;
         internal UISlider sizeSlider;
@@ -43,7 +41,7 @@ namespace ForestBrushRevisited.GUI
 
             if (!ModSettings.Settings.BrushOptionsOpen)
             {
-                owner.BrushSelectSection.UnfocusHideOptionsSectionButton();
+                ForestBrushPanel.Instance.BrushSelectSection.UnfocusHideOptionsSectionButton();
                 Hide();
             }
         }
@@ -62,7 +60,6 @@ namespace ForestBrushRevisited.GUI
 
         private void Setup()
         {
-            owner = (ForestBrushPanel)parent;
             autoLayout = true;
             autoLayoutDirection = LayoutDirection.Vertical;
             autoFitChildrenVertically = true;
@@ -117,7 +114,7 @@ namespace ForestBrushRevisited.GUI
 
         private void SizeSlider_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
         {
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         private void SizeSlider_eventValueChanged(UIComponent component, float value)
@@ -181,7 +178,7 @@ namespace ForestBrushRevisited.GUI
 
         private void StrengthSlider_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
         {
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         private void StrengthSlider_eventValueChanged(UIComponent component, float value)
@@ -248,7 +245,7 @@ namespace ForestBrushRevisited.GUI
 
         private void DensitySlider_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
         {
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         private void DensitySlider_eventValueChanged(UIComponent component, float value)
@@ -330,14 +327,14 @@ namespace ForestBrushRevisited.GUI
             ModSettings.Settings.SelectedBrush.Options = options;
             UpdateBindings(options);
             autoDensityCheckBox.isChecked = options.AutoDensity;
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         private void AutoDensityCheckBox_eventCheckChanged(UIComponent component, bool value)
         {
             ModSettings.Settings.SelectedBrush.Options.AutoDensity = value;
             densityLabel.isEnabled = densitySlider.isEnabled = !value;
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         public string AutoDensityLabelText => Translation.Instance.GetTranslation("FOREST-BRUSH-BRUSH-OPTIONS-AUTODENSITY");

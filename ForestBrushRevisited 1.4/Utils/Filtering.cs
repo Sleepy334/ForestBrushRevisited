@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ForestBrushRevisited.GUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -110,7 +111,7 @@ namespace ForestBrushRevisited
             ClearFilteredData();
             if (filters != null && filters.Length > 0 && !string.IsNullOrEmpty(filters[0]))
             {
-                var brushTrees = ForestBrush.Instance.BrushTool.TreeInfos;
+                var brushTrees = ForestBrush.Instance.BrushContainer.TreeInfos;
                 var treeAuthors = ForestBrush.Instance.TreeAuthors;
                 var treeMeshData = ForestBrush.Instance.TreesMeshData;
 
@@ -188,9 +189,9 @@ namespace ForestBrushRevisited
                 treeList = Data;
             }
 
-            if (ForestBrush.Instance.ForestBrushPanel != null)
+            if (ForestBrushPanel.Instance != null)
             {
-                ForestBrush.Instance.ForestBrushPanel.SetTreeList(treeList);
+                ForestBrushPanel.Instance.SetTreeList(treeList);
             }
         }
 
@@ -203,7 +204,7 @@ namespace ForestBrushRevisited
 
             if (filters != null && filters.Length > 0 && !string.IsNullOrEmpty(filters[0]))
             {
-                var brushTrees = ForestBrush.Instance.BrushTool.TreeInfos;
+                var brushTrees = ForestBrush.Instance.BrushContainer.TreeInfos;
                 var treeAuthors = ForestBrush.Instance.TreeAuthors;
                 var treeMeshData = ForestBrush.Instance.TreesMeshData;
                 List<TreeInfo> newData = new List<TreeInfo>();
@@ -256,9 +257,9 @@ namespace ForestBrushRevisited
                 treeList = newData;
             }
 
-            if (ForestBrush.Instance.ForestBrushPanel != null)
+            if (ForestBrushPanel.Instance != null)
             {
-                ForestBrush.Instance.ForestBrushPanel.SetTreeList(treeList);
+                ForestBrushPanel.Instance.SetTreeList(treeList);
             }
         }
 
@@ -288,9 +289,9 @@ namespace ForestBrushRevisited
                 treeList = newData;
             }
 
-            if (ForestBrush.Instance.ForestBrushPanel != null)
+            if (ForestBrushPanel.Instance != null)
             {
-                ForestBrush.Instance.ForestBrushPanel.SetTreeList(treeList);
+                ForestBrushPanel.Instance.SetTreeList(treeList);
             }
         }
     }

@@ -1,13 +1,13 @@
 ﻿using ColossalFramework.Plugins;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEngine;
 
 namespace ForestBrushRevisited
 {
-    public static class DependencyUtilities
+    public static class DependencyUtils
     {
-        private static Dictionary<string, bool> s_pluginRunning = new Dictionary<string, bool>();
+        private static Dictionary<long, bool> s_pluginRunning = new Dictionary<long, bool>();
+        private static bool? s_bNaturalDisastersDlcOwned = null;
 
         public static void SearchPlugins()
         {
@@ -19,8 +19,10 @@ namespace ForestBrushRevisited
             Debug.Log(sPlugins);
         }
 
-        public static bool IsPluginRunningNotCached(string sPluginId, string sAssemblyName)
+        public static bool IsPluginRunningNotCached(long pluginId, string sAssemblyName)
         {
+            string sPluginId = pluginId.ToString();
+
             bool bRunning = false;
             foreach (PluginManager.PluginInfo oPlugin in PluginManager.instance.GetPluginsInfo())
             {
@@ -52,85 +54,91 @@ namespace ForestBrushRevisited
             return bRunning;
         }
 
-        public static bool IsPluginRunning(string sPluginId, string sAssemblyName)
+        public static bool IsPluginRunning(long pluginId, string sAssemblyName)
         {
             // Only cache result once map is loaded
             if (ForestBrushLoader.IsLoaded())
             {
-                if (!s_pluginRunning.ContainsKey(sPluginId))
+                if (!s_pluginRunning.TryGetValue(pluginId, out bool bRunning))
                 {
-                    s_pluginRunning[sPluginId] = IsPluginRunningNotCached(sPluginId, sAssemblyName);
+                    bRunning = IsPluginRunningNotCached(pluginId, sAssemblyName);
+                    s_pluginRunning[pluginId] = bRunning;
                 }
 
-                return s_pluginRunning[sPluginId];
+                return bRunning;
             }
             else
             {
-                return IsPluginRunningNotCached(sPluginId, sAssemblyName);
+                return IsPluginRunningNotCached(pluginId, sAssemblyName);
             }
         }
 
         public static bool IsHarmonyRunning()
         {
             // We look for either Harmony 2.2-0 steam ID or CitiesHarmony assembly name
-            const string sPLUGIN_ID = "2040656402";
-            return IsPluginRunningNotCached(sPLUGIN_ID, "CitiesHarmony");
+            return IsPluginRunningNotCached(2040656402, "CitiesHarmony");
         }
 
         public static bool IsSmarterFireFightersRunning()
         {
-            const string sSMARTER_FIREFIGHTERS_ID = "2346565561";
-            return IsPluginRunning(sSMARTER_FIREFIGHTERS_ID, "");
+            return IsPluginRunning(2346565561, "SmarterFirefighters");
         }
 
         public static bool IsUnifiedUIRunning()
         {
-            const string sUNIFIED_UI_ID = "2255219025";
-            return IsPluginRunning(sUNIFIED_UI_ID, "");
+            return IsPluginRunning(2255219025, "UnifiedUILib");
         }
 
         public static bool IsPloppableRICORunning()
         {
-            const string sMOD_ID = "2016920607";
-            const string sAssemblyName = "ploppablerico";
-            return IsPluginRunning(sMOD_ID, sAssemblyName);
+            return IsPluginRunning(2016920607, "ploppablerico");
         }
 
         public static bool IsRepainterRunning()
         {
-            const string sMOD_ID = "2101551127";
-            return IsPluginRunning(sMOD_ID, "");
+            return IsPluginRunning(2101551127, "Painter");
         }
 
         public static bool IsAdvancedBuildingLevelRunning()
         {
-            const string sMOD_ID = "2133705267";
-            return IsPluginRunning(sMOD_ID, "");
+            return IsPluginRunning(2133705267, "AdvancedBuildingLevelControl");
         }
 
         public static bool IsRONRunning()
         {
-            const string sMOD_ID = "2405917899";
-            const string sAssemblyName = "RON";
-            return IsPluginRunning(sMOD_ID, sAssemblyName);
+            return IsPluginRunning(2405917899, "RON");
         }
 
         public static bool IsAdvancedOutsideConnectionsRunning()
         {
-            const string sMOD_ID = "2053500739";
-            return IsPluginRunning(sMOD_ID, "AdvancedOutsideConnection");
+            return IsPluginRunning(2053500739, "AdvancedOutsideConnection");
         }
 
+        public static bool IsSeniorCitizenCenterModRunning()
+        {
+            return IsPluginRunning(2559105223, "SeniorCitizenCenterMod");
+        }
+
+        public static bool IsEmployOverEducatedWorkersRunning()
+        {
+            return IsPluginRunning(1674732053, "EmployOvereducatedWorkers");
+        }
+
+        public static bool IsTaxiOverhaulRunning()
+        {
+            return IsPluginRunning(long.MaxValue, "TaxiOverhaul");
+        }
+        
         public static Assembly? GetCallAgainAssembly()
         {
             // Iterate through each loaded plugin assembly.
             foreach (PluginManager.PluginInfo plugin in PluginManager.instance.GetPluginsInfo())
             {
-                if (plugin != null)
+                if (plugin is not null)
                 {
                     foreach (Assembly assembly in plugin.GetAssemblies())
                     {
-                        if (assembly != null && assembly.GetName().Name.Equals("CallAgain") && plugin.isEnabled)
+                        if (assembly is not null && assembly.GetName().Name.Equals("CallAgain") && plugin.isEnabled)
                         {
                             return assembly;
                         }
@@ -145,11 +153,11 @@ namespace ForestBrushRevisited
             // Iterate through each loaded plugin assembly.
             foreach (PluginManager.PluginInfo plugin in PluginManager.instance.GetPluginsInfo())
             {
-                if (plugin != null)
+                if (plugin is not null)
                 {
                     foreach (Assembly assembly in plugin.GetAssemblies())
                     {
-                        if (assembly != null && assembly.GetName().Name.Equals("CargoFerries") && plugin.isEnabled)
+                        if (assembly is not null && assembly.GetName().Name.Equals("CargoFerries") && plugin.isEnabled)
                         {
                             return assembly;
                         }
@@ -161,7 +169,12 @@ namespace ForestBrushRevisited
 
         public static bool IsNaturalDisastersDLC()
         {
-            return SteamHelper.IsDLCOwned(SteamHelper.DLC.NaturalDisastersDLC);
+            if (s_bNaturalDisastersDlcOwned is null)
+            {
+                s_bNaturalDisastersDlcOwned = SteamHelper.IsDLCOwned(SteamHelper.DLC.NaturalDisastersDLC);
+            }
+
+            return s_bNaturalDisastersDlcOwned.Value;
         }
     }
 }

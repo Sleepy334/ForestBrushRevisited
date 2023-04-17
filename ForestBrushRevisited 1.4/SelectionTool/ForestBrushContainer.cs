@@ -1,36 +1,47 @@
 ﻿using ColossalFramework.UI;
 using ForestBrushRevisited.GUI;
 using ForestBrushRevisited.TranslationFramework;
+using ForestBrushRevisited.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ForestBrushRevisited
+namespace ForestBrushRevisited.SelectionTool
 {
-    public class ForestBrushTool : MonoBehaviour
+    public class ForestBrushContainer
     {
-        private ProbabilityCalculator probabilityCalculator;
-
         public Brush Brush => ModSettings.Settings.SelectedBrush;
+        public List<Tree> Trees = new List<Tree>();
+        public List<TreeInfo> TreeInfos { get; set; } = new List<TreeInfo>();
+        private List<Brush> Brushes => ModSettings.Settings.Brushes;
+        private ProbabilityCalculator probabilityCalculator = new ProbabilityCalculator();
 
-        internal List<Tree> Trees = new List<Tree>();
+        private TreeInfo? m_container = null;
 
-        internal List<TreeInfo> TreeInfos { get; set; } = new List<TreeInfo>();
-
-        private TreeInfo Container { get; set; } = ForestBrush.Instance.Container;
-
-        public List<Brush> Brushes => ModSettings.Settings.Brushes;
-
-        void Awake() {
-            probabilityCalculator = new ProbabilityCalculator();
+        public TreeInfo Container
+        {
+            get
+            {
+                if (m_container == null)
+                {
+                    m_container = ForestBrush.Instantiate(PrefabCollection<TreeInfo>.GetLoaded(0u).gameObject).GetComponent<TreeInfo>();
+                    m_container.gameObject.transform.parent = ForestBrush.Instance.gameObject.transform;
+                    m_container.gameObject.name = "ForestBrushContainer";
+                    m_container.name = "ForestBrushContainer";
+                    m_container.m_mesh = null;
+                    m_container.gameObject.SetActive(false);
+                }
+                return m_container;
+            }
         }
 
-        public void UpdateTool(string brushName) {
+        public void UpdateTool(string brushName)
+        {
             ModSettings.Settings.SelectBrush(brushName);
 
             TreeInfos.Clear();
             Trees.Clear();
-            foreach (var tree in Brush.Trees) 
+            foreach (var tree in Brush.Trees)
             {
                 if (ForestBrush.Instance.GetTreeInfo(tree.Name, out TreeInfo? treeInfo))
                 {
@@ -42,22 +53,24 @@ namespace ForestBrushRevisited
                 }
             }
 
-            Container = CreateBrushPrefab(Trees);
+            m_container = CreateBrushPrefab(Trees);
+            ForestBrushPanel.Instance.LoadBrush(Brush);
 
-            ForestBrush.Instance.ForestBrushPanel.LoadBrush(Brush);
-
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
-        private void Add(TreeInfo tree) {
+        private void Add(TreeInfo tree)
+        {
             if (!TreeInfos.Contains(tree)) TreeInfos.Add(tree);
-            if (Brush.Trees.Find(t => t.Name == tree.name) == null) {
+            if (Brush.Trees.Find(t => t.Name == tree.name) == null)
+            {
                 Brush.Add(tree);
                 Trees.Add(new Tree(tree));
             }
         }
 
-        private void Remove(TreeInfo treeInfo) {
+        private void Remove(TreeInfo treeInfo)
+        {
             if (!TreeInfos.Contains(treeInfo)) return;
             TreeInfos.Remove(treeInfo);
             Brush.Remove(treeInfo);
@@ -66,18 +79,24 @@ namespace ForestBrushRevisited
             Trees.Remove(tree);
         }
 
-        public void RemoveAll() {
-            foreach (TreeInfo tree in ForestBrush.Instance.ForestBrushPanel.BrushEditSection.TreesList.rowsData) {
+        public void RemoveAll()
+        {
+            foreach (TreeInfo tree in ForestBrushPanel.Instance.BrushEditSection.TreesList.rowsData)
+            {
                 Remove(tree);
             }
-            foreach (TreeItemRow item in ForestBrush.Instance.ForestBrushPanel.BrushEditSection.TreesList.rows) {
+            foreach (TreeItemRow item in ForestBrushPanel.Instance.BrushEditSection.TreesList.rows)
+            {
                 item?.ToggleCheckbox(false);
             }
         }
 
-        private void AddAll() {
-            foreach (TreeInfo tree in ForestBrush.Instance.ForestBrushPanel.BrushEditSection.TreesList.rowsData) {
-                if (TreeInfos.Count == 100) {
+        private void AddAll()
+        {
+            foreach (TreeInfo tree in ForestBrushPanel.Instance.BrushEditSection.TreesList.rowsData)
+            {
+                if (TreeInfos.Count == 100)
+                {
                     UIView.library.ShowModal<ExceptionPanel>("ExceptionPanel").SetMessage(
                          Translation.Instance.GetTranslation("FOREST-BRUSH-MODAL-LIMITREACHED-TITLE"),
                          Translation.Instance.GetTranslation("FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ALL"),
@@ -87,15 +106,17 @@ namespace ForestBrushRevisited
                 Add(tree);
             }
 
-            IUIFastListRow[] itemBuffer = ForestBrush.Instance.ForestBrushPanel.BrushEditSection.TreesList.rows.m_buffer;
+            IUIFastListRow[] itemBuffer = ForestBrushPanel.Instance.BrushEditSection.TreesList.rows.m_buffer;
 
-            for (int i = 0; i < itemBuffer.Length; i++) {
+            for (int i = 0; i < itemBuffer.Length; i++)
+            {
                 TreeItemRow treeItem = itemBuffer[i] as TreeItemRow;
                 if (TreeInfos.Contains(treeItem.Prefab)) treeItem.ToggleCheckbox(true);
             }
         }
 
-        public void New(string brushName) {
+        public void New(string brushName)
+        {
             if (Brushes.Find(b => b.Name == brushName) == null)
             {
                 Brush brush = Brush.Default();
@@ -120,24 +141,28 @@ namespace ForestBrushRevisited
             }
         }
 
-        internal void DeleteCurrent() {
+        internal void DeleteCurrent()
+        {
             Brushes.Remove(Brush);
             ModSettings.Settings.SelectNextBestBrush();
-            ForestBrush.Instance.ForestBrushPanel.BrushSelectSection.UpdateDropDown();
-            string nextBrush = ForestBrush.Instance.ForestBrushPanel.BrushSelectSection.SelectBrushDropDown.items.Length <= 0 ? Constants.NewBrushName :
-                ForestBrush.Instance.ForestBrushPanel.BrushSelectSection.SelectBrushDropDown.selectedValue;
+            ForestBrushPanel.Instance.BrushSelectSection.UpdateDropDown();
+            string nextBrush = ForestBrushPanel.Instance.BrushSelectSection.SelectBrushDropDown.items.Length <= 0 ? Constants.NewBrushName :
+                ForestBrushPanel.Instance.BrushSelectSection.SelectBrushDropDown.selectedValue;
             UpdateTool(nextBrush);
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
-        public TreeInfo CreateBrushPrefab(List<Tree> trees) {
+        public TreeInfo CreateBrushPrefab(List<Tree> trees)
+        {
             var variations = new TreeInfo.Variation[TreeInfos.Count];
-            if (TreeInfos.Count == 0) {
+            if (TreeInfos.Count == 0)
+            {
                 Container.m_variations = variations;
                 return Container;
             }
             var probabilities = probabilityCalculator.Calculate(trees);
-            for (int i = 0; i < probabilities.Count; i++) {
+            for (int i = 0; i < probabilities.Count; i++)
+            {
                 var variation = new TreeInfo.Variation();
                 variation.m_tree = variation.m_finalTree = TreeInfos[i];
                 variation.m_probability = probabilities[i].FloorProbability;
@@ -152,18 +177,20 @@ namespace ForestBrushRevisited
             return Container;
         }
 
-        public void UpdateBrushPrefabProbabilities() {
+        public void UpdateBrushPrefabProbabilities()
+        {
             if (TreeInfos.Count == 0) return;
             var probabilities = probabilityCalculator.Calculate(Trees);
-            for (int i = 0; i < probabilities.Count; i++) {
+            for (int i = 0; i < probabilities.Count; i++)
+            {
                 var variation = Container.m_variations[i];
                 variation.m_probability = probabilities[i].FloorProbability;
             }
         }
 
-        internal void UpdateTreeList(TreeInfo treeInfo, bool value, bool updateAll) 
-        {    
-            if (updateAll) 
+        internal void UpdateTreeList(TreeInfo treeInfo, bool value, bool updateAll)
+        {
+            if (updateAll)
             {
                 if (value)
                 {
@@ -180,13 +207,13 @@ namespace ForestBrushRevisited
                 {
                     Add(treeInfo);
                 }
-                else 
-                { 
-                    Remove(treeInfo); 
+                else
+                {
+                    Remove(treeInfo);
                 }
             }
-            Container = CreateBrushPrefab(Trees);
-            ModSettings.SaveSettings();
+            m_container = CreateBrushPrefab(Trees);
+            ModSettings.Settings.Save();
         }
     }
 }

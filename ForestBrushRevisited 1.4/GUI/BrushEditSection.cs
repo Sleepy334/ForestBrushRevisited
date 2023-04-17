@@ -7,7 +7,6 @@ namespace ForestBrushRevisited.GUI
 {
     public class BrushEditSection : UIPanel
     {
-        ForestBrushPanel owner;
         UIPanel topPanel;
         UIPanel centerPanel;
         UIPanel bottomPanel;
@@ -27,12 +26,11 @@ namespace ForestBrushRevisited.GUI
         public override void Start()
         {
             base.Start();
-            owner = (ForestBrushPanel)parent;
-            selectBrushDropDown = owner.BrushSelectSection.SelectBrushDropDown;
+            selectBrushDropDown = ForestBrushPanel.Instance.BrushSelectSection.SelectBrushDropDown;
 
             Filtering = new Filtering();
 
-            width = owner.width;
+            width = ForestBrushPanel.Instance.width;
             autoLayout = true;
             autoLayoutDirection = LayoutDirection.Vertical;
             autoFitChildrenVertically = true;
@@ -90,7 +88,7 @@ namespace ForestBrushRevisited.GUI
 
             if (!ModSettings.Settings.BrushEditOpen)
             {
-                owner.BrushSelectSection.UnfocusEditSectionButton();
+                ForestBrushPanel.Instance.BrushSelectSection.UnfocusEditSectionButton();
                 Hide();
             }
         }
@@ -123,7 +121,7 @@ namespace ForestBrushRevisited.GUI
 
         private void RenameBrushTextField_eventLostFocus(UIComponent component, UIFocusEventParameter eventParam)
         {
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         internal void LocaleChanged()
@@ -281,7 +279,7 @@ namespace ForestBrushRevisited.GUI
                     return;
                 }
             }
-            ForestBrush.Instance.BrushTool.New(name);
+            ForestBrush.Instance.BrushContainer.New(name);
             renameBrushTextField.eventTextChanged -= RenameBrushTextField_eventTextChanged;
             renameBrushTextField.text = name;
             renameBrushTextField.Focus();
@@ -308,23 +306,23 @@ namespace ForestBrushRevisited.GUI
             {
                 if (i == 1)
                 {
-                    ForestBrush.Instance.BrushTool.DeleteCurrent();
+                    ForestBrush.Instance.BrushContainer.DeleteCurrent();
                 }
             });
         }
 
         private void RenameBrushTextField_eventTextChanged(UIComponent component, string newName)
         {
-            string currentName = ForestBrush.Instance.BrushTool.Brush.Name;
+            string currentName = ForestBrush.Instance.BrushContainer.Brush.Name;
             if (ModSettings.Settings.Brushes.Find(b => b.Name == newName && b.Name != currentName) == null)
             {
                 ResetRenameError();
-                UIDropDown brushDropDown = owner.BrushSelectSection.SelectBrushDropDown;
+                UIDropDown brushDropDown = ForestBrushPanel.Instance.BrushSelectSection.SelectBrushDropDown;
                 if (newName != brushDropDown.items[brushDropDown.selectedIndex])
                 {
                     brushDropDown.items[brushDropDown.selectedIndex] = newName;
                 }
-                ForestBrush.Instance.BrushTool.Brush.Name = newName;
+                ForestBrush.Instance.BrushContainer.Brush.Name = newName;
                 brushDropDown.Invalidate();
             }
             else

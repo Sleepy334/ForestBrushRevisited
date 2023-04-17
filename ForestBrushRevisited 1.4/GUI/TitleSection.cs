@@ -6,8 +6,9 @@ namespace ForestBrushRevisited.GUI
 {
     public class TitleSection : UIPanel
     {
+        public bool m_bDragging = false;
         UISprite icon;
-        UIDragHandle dragHandle;
+        UIDragHandle m_dragHandle;
         UILabel titleLabel;
         UIButton closeButton;
 
@@ -17,6 +18,11 @@ namespace ForestBrushRevisited.GUI
 
             width = parent.width;
             height = Constants.UITitleBarHeight;
+            relativePosition = Vector3.zero;
+            isVisible = true;
+            canFocus = true;
+            isInteractive = true;
+            backgroundSprite = "ButtonMenuDisabled";
 
             icon = AddUIComponent<UISprite>();
             icon.atlas = ResourceLoader.ForestBrushAtlas;
@@ -29,12 +35,16 @@ namespace ForestBrushRevisited.GUI
             titleLabel.textScale = Constants.UITitleTextScale;
             titleLabel.relativePosition = new Vector3((width - titleLabel.width) / 2f, (Constants.UITitleBarHeight - titleLabel.height) / 2f);
 
-            dragHandle = AddUIComponent<UIDragHandle>();
-            dragHandle.size = new Vector2(width, Constants.UITitleBarHeight);
-            dragHandle.relativePosition = Vector3.zero;
-            dragHandle.target = parent;
-            dragHandle.eventMouseUp += DragHandle_eventMouseUp;
-
+            m_dragHandle = AddUIComponent<UIDragHandle>();
+            m_dragHandle.size = new Vector2(width, Constants.UITitleBarHeight);
+            m_dragHandle.relativePosition = Vector3.zero;
+            m_dragHandle.target = parent;
+            m_dragHandle.eventMouseUp += DragHandle_eventMouseUp;
+            m_dragHandle.eventDragStart += (c, e) => 
+            { 
+                m_bDragging = true;
+            };
+            
             closeButton = AddUIComponent<UIButton>();
             closeButton.atlas = ResourceLoader.Atlas;
             closeButton.size = new Vector2(20f, 20f);
@@ -47,27 +57,28 @@ namespace ForestBrushRevisited.GUI
 
         public override void OnDestroy()
         {
-            dragHandle.eventMouseUp -= DragHandle_eventMouseUp;
+            m_dragHandle.eventMouseUp -= DragHandle_eventMouseUp;
             closeButton.eventClick -= CloseButton_eventClick;
             base.OnDestroy();
         }
 
         private void DragHandle_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
         {
-            ForestBrush.Instance.ForestBrushPanel.ClampToScreen();
+            m_bDragging = false;
+            ForestBrushPanel.Instance.ClampToScreen();
             SavePanelPosition();
         }
 
         private void CloseButton_eventClick(UIComponent component, UIMouseEventParameter eventParam)
         {
-            ForestBrush.Instance.ToggleButton.SimulateClick();
+            ForestBrush.Instance.HidePanel();
         }
 
         public void SavePanelPosition()
         {
             ModSettings.Settings.PanelPosX = parent.absolutePosition.x;
             ModSettings.Settings.PanelPosY = parent.absolutePosition.y;
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ForestBrushRevisited
+namespace ForestBrushRevisited.Utils
 {
     public class ProbabilityCalculator
     {
@@ -56,7 +56,7 @@ namespace ForestBrushRevisited
 
             while (floorProbabilitySum != 100)
             {
-                int correction = (floorProbabilitySum < 100) ? 1 : -1;
+                int correction = floorProbabilitySum < 100 ? 1 : -1;
 
                 // find the tree which deserves the increase or decrease in probability
                 int biggestErrorIndex = -1;

@@ -2,13 +2,13 @@
 using ColossalFramework.Globalization;
 using ColossalFramework.Math;
 using ColossalFramework.UI;
-using ForestBrushRevisited.Persistence;
+using ForestBrushRevisited.GUI;
 using ForestBrushRevisited.TranslationFramework;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnifiedUI.Helpers;
 using UnityEngine;
 
 namespace ForestBrushRevisited
@@ -30,7 +30,7 @@ namespace ForestBrushRevisited
         private Vector3 BrushPosition;
         private Randomizer Randomizer;
         private static bool s_bLoadingTool = false;
-
+        private UIComponent? m_button = null;
         private float Size => Options.Size;
         private float Strength => Options.Strength;
         private float Density => Options.Density;
@@ -38,7 +38,7 @@ namespace ForestBrushRevisited
         {
             get
             {
-                return ForestBrush.Instance.Container == null || ForestBrush.Instance.Container.m_variations == null ? 0 : ForestBrush.Instance.Container.m_variations.Length;
+                return ForestBrush.Instance.BrushContainer.Container == null || ForestBrush.Instance.BrushContainer.Container.m_variations == null ? 0 : ForestBrush.Instance.BrushContainer.Container.m_variations.Length;
             }
         }
 
@@ -165,30 +165,54 @@ namespace ForestBrushRevisited
                     ToolsModifierControl.SetTool<DefaultTool>();
                 }
             }
+
+            if (DependencyUtils.IsUnifiedUIRunning())
+            {
+                Texture2D? icon = TextureResources.LoadDllResource("ForestBrushNormal.png", 32, 32);
+                if (icon is null)
+                {
+                    Debug.LogError("Failed to load icon from resources");
+                    return;
+                }
+
+                m_button = UUIHelpers.RegisterToolButton(
+                    name: "ForestBrushRevisited",
+                    groupName: null,
+                    tooltip: ForestBrushMod.Title,
+                    tool: this,
+                    icon: icon,
+                    hotkeys: new UUIHotKeys { ActivationKey = ModSettings.Settings.ToggleTool });
+            }
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
-            try {
+            try 
+            {
                 FieldInfo fieldInfo = typeof(ToolController).GetField("m_tools", BindingFlags.Instance | BindingFlags.NonPublic);
                 List<ToolBase> tools = ((ToolBase[])fieldInfo.GetValue(ToolsModifierControl.toolController)).ToList();
                 tools.Remove(this);
                 fieldInfo.SetValue(ToolsModifierControl.toolController, tools.ToArray());
                 Dictionary<Type, ToolBase> dictionary = (Dictionary<Type, ToolBase>)typeof(ToolsModifierControl).GetField("m_Tools", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
                 dictionary.Remove(typeof(ForestTool));
-                if (BrushMaterial != null) {
+                if (BrushMaterial != null) 
+                {
                     Destroy(BrushMaterial);
                     BrushMaterial = null;
                 }
-            } catch (Exception exception) {
+            } 
+            catch (Exception exception) 
+            {
                 Debug.LogWarning($"Exception caught: {exception}");
             }
         }
 
         protected override void OnEnable() {
             base.OnEnable();
+
+            ForestBrush.Instance.ShowPanel();
 
             if (!s_bLoadingTool)
             {
@@ -201,6 +225,9 @@ namespace ForestBrushRevisited
 
         protected override void OnDisable() {
             base.OnDisable();
+
+            ForestBrush.Instance.HidePanel();
+
             SetBrush(string.Empty);
             MouseLeftDown = false;
             MouseRightDown = false;
@@ -219,7 +246,7 @@ namespace ForestBrushRevisited
             if (!Brushes.TryGetValue(id, out Texture2D brush)) return;
             SetBrush(brush);
             Options.BitmapID = id;
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         private void SetBrush(Texture2D brush) 
@@ -261,7 +288,7 @@ namespace ForestBrushRevisited
                 case EventType.MouseDown:
                 case EventType.MouseDrag:
                     {
-                        if (IsInsideUI())
+                        if (IsInsideUI() || (ForestBrush.Instance != null && ForestBrushPanel.Instance.IsDragging()))
                         {
                             return;
                         }
@@ -330,7 +357,7 @@ namespace ForestBrushRevisited
             {
                 int iSeed = TreeManager.instance.m_treeCount + RandomModifier;
                 Randomizer random = new Randomizer(iSeed);
-                TreeInfo treeInfo = ForestBrush.Instance.Container.GetVariation(ref random);
+                TreeInfo treeInfo = ForestBrush.Instance.BrushContainer.Container.GetVariation(ref random);
 
                 bool success = true;
                 bool needMoney = ModSettings.Settings.ChargeMoney && (ToolManager.instance.m_properties.m_mode & ItemClass.Availability.Game) != 0;
@@ -354,16 +381,16 @@ namespace ForestBrushRevisited
         }
 
         protected override void OnToolUpdate() {
-            if (ForestBrush.Instance.Container is null) return;
+            if (ForestBrush.Instance.BrushContainer.Container is null) return;
             if (MouseRayValid) {
                 if (ModSettings.Settings.ShowInfoTooltip && (CtrlDown || AltDown)) {
                     string density = Options.AutoDensity ? "Auto" : string.Concat(Math.Round((16 - Options.Density) * 6.451612903225806f, 1, MidpointRounding.AwayFromZero), "%");
-                    string text = $"Trees: {ForestBrush.Instance.Container.m_variations.Length}\nSize: {Options.Size}\nStrength: { Math.Round(Options.Strength * 100, 1) + "%"}\nDensity: {density}";
+                    string text = $"Trees: {ForestBrush.Instance.BrushContainer.Container.m_variations.Length}\nSize: {Options.Size}\nStrength: { Math.Round(Options.Strength * 100, 1) + "%"}\nDensity: {density}";
                     ShowInfo(true, text);
                 } else if (Size == 1.0f) {
                     if (TreeCount > 0) {
                         Randomizer tmp = new Randomizer(TreeManager.instance.m_treeCount + RandomModifier);
-                        int cost = ForestBrush.Instance.Container.GetVariation(ref tmp).GetConstructionCost();
+                        int cost = ForestBrush.Instance.BrushContainer.Container.GetVariation(ref tmp).GetConstructionCost();
                         if (ModSettings.Settings.ChargeMoney && cost != 0) {
                             string text = StringUtils.SafeFormat(Locale.Get(LocaleID.TOOL_CONSTRUCTION_COST), cost / 100);
                             ShowToolInfo(true, text, MousePosition);
@@ -398,7 +425,7 @@ namespace ForestBrushRevisited
                 }
             }
 
-            ForestBrush.Instance.ForestBrushPanel.BrushOptionsSection.UpdateBindings(Options);
+            ForestBrushPanel.Instance.BrushOptionsSection.UpdateBindings(Options);
         }
 
         protected void ShowInfo(bool show, string text) {
@@ -410,7 +437,7 @@ namespace ForestBrushRevisited
                 ToolBase.cursorInfoLabel.isVisible = true;
                 UIView uiview = ToolBase.cursorInfoLabel.GetUIView();
                 Vector2 vector = (!(ToolBase.fullscreenContainer != null)) ? uiview.GetScreenResolution() : ToolBase.fullscreenContainer.size;
-                Vector3 relativePosition = ForestBrush.Instance.ForestBrushPanel.absolutePosition + new Vector3(410.0f, 0.0f);
+                Vector3 relativePosition = ForestBrushPanel.Instance.absolutePosition + new Vector3(410.0f, 0.0f);
                 ToolBase.cursorInfoLabel.text = text;
                 if (relativePosition.x < 0f) {
                     relativePosition.x = 0f;
@@ -439,7 +466,10 @@ namespace ForestBrushRevisited
         }
 
         public override void SimulationStep() {
-            if (ForestBrush.Instance.Container is null) return;
+            if (ForestBrush.Instance.BrushContainer.Container is null)
+            {
+                return;
+            }
 
             ulong[] collidingSegmentBuffer;
             ulong[] collidingBuildingBuffer;
@@ -448,76 +478,61 @@ namespace ForestBrushRevisited
                 RaycastInput input = new RaycastInput(MouseRay, MouseRayLength);
                 if (RayCast(input, out RaycastOutput output)) {
                     MousePosition = output.m_hitPos;
-                    if (Size > 1.0f) {
+                    if (Size > 1.0f) 
+                    {
                         if (MouseLeftDown != MouseRightDown) ApplyBrush();
-                    } else {
+                    } 
+                    else 
+                    {
                         Randomizer tmp = Randomizer;
                         Randomizer tmp2 = new Randomizer(TreeManager.instance.m_treeCount + RandomModifier);
                         uint item = TreeManager.instance.m_trees.NextFreeItem(ref tmp);
-                        TreeInfo treeInfo = ForestBrush.Instance.Container.GetVariation(ref tmp2);
-                        ToolErrors errors = CheckPlacementErrors(treeInfo, output.m_hitPos, item, collidingSegmentBuffer, collidingBuildingBuffer);
+                        TreeInfo treeInfo = ForestBrush.Instance.BrushContainer.Container.GetVariation(ref tmp2);
+                        ToolErrors errors = TreeTool.CheckPlacementErrors(treeInfo, output.m_hitPos, output.m_currentEditObject, item, collidingSegmentBuffer, collidingBuildingBuffer);
                         bool needMoney = ModSettings.Settings.ChargeMoney && (ToolManager.instance.m_properties.m_mode & ItemClass.Availability.Game) != 0;
-                        if (needMoney) {
+                        if (needMoney) 
+                        {
                             int cost = treeInfo.GetConstructionCost();
-                            if (cost != 0) {
-                                if (cost != EconomyManager.instance.PeekResource(EconomyManager.Resource.Construction, cost)) {
+                            if (cost != 0) 
+                            {
+                                if (cost != EconomyManager.instance.PeekResource(EconomyManager.Resource.Construction, cost)) 
+                                {
                                     errors |= ToolErrors.NotEnoughMoney;
                                 }
                             }
                         }
-                        if (!TreeManager.instance.CheckLimits()) errors |= ToolErrors.TooManyObjects;
+                        if (!TreeManager.instance.CheckLimits())
+                        {
+                            errors |= ToolErrors.TooManyObjects;
+                        }
                         MousePosition = output.m_hitPos;
                         Errors = errors;
                     }
-                } else {
+                } 
+                else 
+                {
                     Errors = ToolErrors.RaycastFailed;
                 }
-            } finally {
+            } 
+            finally 
+            {
                 m_toolController.EndColliding();
             }
         }
 
         private void ApplyBrush() {
-            if (ForestBrush.Instance.Container is null) return;
-            if (Painting && TreeCount > 0) AddTreesImpl();
-            else if (Deleting && !AxisChanged) RemoveTreesImpl();
-        }
-
-        public ToolErrors CheckPlacementErrors(TreeInfo info, Vector3 position, uint id, ulong[] collidingSegmentBuffer, ulong[] collidingBuildingBuffer) {
-            if (ShiftDown) return ToolErrors.None;
-            Randomizer tmp = new Randomizer(TreeManager.instance.m_treeCount + RandomModifier);
-            TreeInfo treeInfo = ForestBrush.Instance.Container.GetVariation(ref tmp);
-            Vector3 treePosition = MousePosition;
-            treePosition.y = Singleton<TerrainManager>.instance.SampleDetailHeight(treePosition, out float f, out float f2);
-            Randomizer treeRandomizer = new Randomizer(id);
-            float scale = treeInfo.m_minScale + treeRandomizer.Int32(10000u) * (treeInfo.m_maxScale - treeInfo.m_minScale) * 0.0001f;
-            float height = treeInfo.m_generatedInfo.m_size.y * scale;
-            float clearance = Tweaker.SingleTreeClearance;
-            Vector2 treePosition2 = VectorUtils.XZ(treePosition);
-            Quad2 quad = default(Quad2);
-            quad.a = treePosition2 + new Vector2(-clearance, -clearance);
-            quad.b = treePosition2 + new Vector2(-clearance, clearance);
-            quad.c = treePosition2 + new Vector2(clearance, clearance);
-            quad.d = treePosition2 + new Vector2(clearance, -clearance);
-            float spacing = Options.AutoDensity ? treeInfo.m_generatedInfo.m_size.x * Tweaker.SpacingFactor : Density;
-            Quad2 spacingQuad = default(Quad2);
-            spacingQuad.a = treePosition2 + new Vector2(-spacing, -spacing);
-            spacingQuad.b = treePosition2 + new Vector2(-spacing, spacing);
-            spacingQuad.c = treePosition2 + new Vector2(spacing, spacing);
-            spacingQuad.d = treePosition2 + new Vector2(spacing, -spacing);
-
-            float minY = MousePosition.y;
-            float maxY = MousePosition.y + height;
-            ItemClass.CollisionType collisionType = ItemClass.CollisionType.Terrain;
-
-            ToolErrors errors = ToolErrors.None;
-            if (PropManager.instance.OverlapQuad(quad, minY, maxY, collisionType, 0, 0)) errors |= ToolErrors.ObjectCollision;
-            if (TreeManager.instance.OverlapQuad(spacingQuad, minY, maxY, collisionType, 0, 0)) errors |= ToolErrors.ObjectCollision;
-            if (NetManager.instance.OverlapQuad(quad, minY, maxY, collisionType, info.m_class.m_layer, 0, 0, 0, collidingSegmentBuffer)) errors |= ToolErrors.ObjectCollision;
-            if (BuildingManager.instance.OverlapQuad(quad, minY, maxY, collisionType, info.m_class.m_layer, 0, 0, 0, collidingBuildingBuffer)) errors |= ToolErrors.ObjectCollision;
-            if (TerrainManager.instance.HasWater(treePosition)) errors |= ToolErrors.CannotBuildOnWater;
-            if (GameAreaManager.instance.QuadOutOfArea(quad)) errors |= ToolErrors.OutOfArea;
-            return errors;
+            if (ForestBrush.Instance.BrushContainer.Container is null)
+            {
+                return;
+            }
+            if (Painting && TreeCount > 0)
+            {
+                AddTreesImpl();
+            }
+            else if (Deleting && !AxisChanged)
+            {
+                RemoveTreesImpl();
+            }
         }
 
         private void AddTreesImpl() {
@@ -551,7 +566,7 @@ namespace ForestBrushRevisited
                 int change = (int)(Strength * (brush * 1.2f - 0.2f) * 10000.0f);
 
                 if (Randomizer.Int32(10000) < change) {
-                    TreeInfo treeInfo = ForestBrush.Instance.Container.GetVariation(ref Randomizer);
+                    TreeInfo treeInfo = ForestBrush.Instance.BrushContainer.Container.GetVariation(ref Randomizer);
 
                     treePosition.y = Singleton<TerrainManager>.instance.SampleDetailHeight(treePosition, out float f, out float f2);
                     float spacing = Options.AutoDensity ? treeInfo.m_generatedInfo.m_size.x * Tweaker.SpacingFactor : Density;
@@ -641,7 +656,7 @@ namespace ForestBrushRevisited
                             var noiseScale = Randomizer.Int32(Tweaker.NoiseScale);
                             var strengthToRandom = UnityEngine.Random.Range(0.0f, Tweaker.MaxRandomRange);
                             TreeInfo treeInfo = TreeManager.instance.m_trees.m_buffer[treeIndex].Info;
-                            if ((SelectiveDelete && ForestBrush.Instance.BrushTool.TreeInfos.Contains(treeInfo))
+                            if ((SelectiveDelete && ForestBrush.Instance.BrushContainer.TreeInfos.Contains(treeInfo))
                             || !SelectiveDelete) {
                                 Vector2 xzTreePosition = VectorUtils.XZ(treePosition);
                                 Vector2 xzMousePosition = VectorUtils.XZ(MousePosition);
@@ -653,14 +668,15 @@ namespace ForestBrushRevisited
                 }
             }
         }
+
         public override void RenderGeometry(RenderManager.CameraInfo cameraInfo) {
-            if (!MouseRayValid || ForestBrush.Instance.Container is null) {
+            if (!MouseRayValid || ForestBrush.Instance.BrushContainer.Container is null) {
                 base.RenderGeometry(cameraInfo);
                 return;
             }
 
             Randomizer tmp = new Randomizer(TreeManager.instance.m_treeCount + RandomModifier);
-            TreeInfo info = ForestBrush.Instance.Container.GetVariation(ref tmp);
+            TreeInfo info = ForestBrush.Instance.BrushContainer.Container.GetVariation(ref tmp);
             if (!(info is null) && Size == 1.0f && Errors == ToolErrors.None && TreeCount > 0) {
                 Randomizer tmp2 = Randomizer;
                 uint item = TreeManager.instance.m_trees.NextFreeItem(ref tmp2);
@@ -669,45 +685,71 @@ namespace ForestBrushRevisited
                 float scale = info.m_minScale + r.Int32(10000) * (info.m_maxScale - info.m_minScale) * 0.0001f;
                 float brightness = info.m_minBrightness + r.Int32(10000) * (info.m_maxBrightness - info.m_minBrightness) * 0.0001f;
 
-                TreeInstance.RenderInstance(null, info, MousePosition, scale, brightness, RenderManager.DefaultColorLocation);
+                TreeInstance.RenderInstance(null, info, MousePosition, scale, brightness, RenderManager.DefaultColorLocation, false);
             }
 
             base.RenderGeometry(cameraInfo);
         }
 
         public override void RenderOverlay(RenderManager.CameraInfo cameraInfo) {
-            if (!MouseRayValid || ForestBrush.Instance.Container is null) return;
+            if (!MouseRayValid)
+            {
+                return;
+            }
+
+            if (ForestBrush.Instance.BrushContainer.Container is null)
+            {
+                Debug.LogError("ForestBrush.Instance.Container is null");
+                return;
+            }
+
             Randomizer tmp = new Randomizer(TreeManager.instance.m_treeCount + RandomModifier);
-            TreeInfo info = ForestBrush.Instance.Container.GetVariation(ref tmp);
-            if (!(info is null) && Size == 1.0f) {
-                Color color = TreeCount == 0 ? m_toolController.m_errorColorInfo : GetToolColor(false, Errors != ToolErrors.None);
-                m_toolController.RenderColliding(cameraInfo, color, color, color, color, 0, 0);
+            TreeInfo info = ForestBrush.Instance.BrushContainer.Container.GetVariation(ref tmp);
 
-                Randomizer tmp2 = Randomizer;
-                uint item = TreeManager.instance.m_trees.NextFreeItem(ref tmp2);
-
-                Randomizer r = new Randomizer(item);
-                float scale = info.m_minScale + r.Int32(10000) * (info.m_maxScale - info.m_minScale) * 0.0001f;
-
-                TreeTool.RenderOverlay(cameraInfo, info, MousePosition, scale, color);
-            } else {
+            if (info is not null && Size == 1.0f) 
+            {
+                RenderSingleTree(cameraInfo, info);
+            } 
+            else 
+            {
                 RenderBrush(cameraInfo);
             }
         }
 
-        private void RenderBrush(RenderManager.CameraInfo cameraInfo) {
-            if (BrushTexture != null) {
-                BrushMaterial.SetTexture(ID_BrushTex, BrushTexture);
+        private void RenderSingleTree(RenderManager.CameraInfo cameraInfo, TreeInfo info)
+        {
+            Color color = TreeCount == 0 ? m_toolController.m_errorColorInfo : GetToolColor(false, Errors != ToolErrors.None);
+            m_toolController.RenderColliding(cameraInfo, color, color, color, color, 0, 0);
+
+            Randomizer tmp2 = Randomizer;
+            uint item = TreeManager.instance.m_trees.NextFreeItem(ref tmp2);
+
+            Randomizer r = new Randomizer(item);
+            float scale = info.m_minScale + r.Int32(10000) * (info.m_maxScale - info.m_minScale) * 0.0001f;
+            TreeTool.RenderOverlay(cameraInfo, info, MousePosition, scale, color);
+        }
+
+        private void RenderBrush(RenderManager.CameraInfo cameraInfo) 
+        {
+            if (BrushTexture != null) 
+            {
                 Vector4 position = BrushPosition;
                 position.w = Size;
+                BrushMaterial.SetTexture(ID_BrushTex, BrushTexture);
                 BrushMaterial.SetVector(this.ID_BrushWS, position);
                 BrushMaterial.SetFloat(ID_Angle, Angle);
+
                 Vector3 center = new Vector3(BrushPosition.x, 512f, BrushPosition.z);
                 Vector3 size = new Vector3(Size, 1224f, Size);
                 Bounds bounds = new Bounds(center, size * 1.5f);
-                ToolManager instance = Singleton<ToolManager>.instance;
-                instance.m_drawCallData.m_overlayCalls = instance.m_drawCallData.m_overlayCalls + 1;
+
+                // Render brush
+                Singleton<ToolManager>.instance.m_drawCallData.m_overlayCalls++;
                 RenderManager.instance.OverlayEffect.DrawEffect(cameraInfo, BrushMaterial, 0, bounds);
+            }
+            else
+            {
+                Debug.LogError("BrushTexture is null");
             }
         }
 
@@ -717,10 +759,12 @@ namespace ForestBrushRevisited
         }
 
         private void ClampAngle() {
-            if (Angle < 0f) {
+            if (Angle < 0f) 
+            {
                 Angle += 360f;
             }
-            if (Angle >= 360f) {
+            if (Angle >= 360f) 
+            {
                 Angle -= 360f;
             }
         }
@@ -748,7 +792,7 @@ namespace ForestBrushRevisited
                 }
                 set {
                     _maxSize = value;
-                    ForestBrush.Instance.ForestBrushPanel.BrushOptionsSection.sizeSlider.maxValue = value;
+                    ForestBrushPanel.Instance.BrushOptionsSection.sizeSlider.maxValue = value;
                 }
             }
         }

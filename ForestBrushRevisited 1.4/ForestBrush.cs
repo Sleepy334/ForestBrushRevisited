@@ -10,6 +10,7 @@ using ForestBrushRevisited.GUI;
 using ForestBrushRevisited.TranslationFramework;
 using UnityEngine;
 using System.Linq;
+using ForestBrushRevisited.SelectionTool;
 
 namespace ForestBrushRevisited
 {
@@ -30,33 +31,27 @@ namespace ForestBrushRevisited
             }
         }
 
-        private ToggleButtonComponents? toggleButtonComponents;
+        public ForestBrushContainer? BrushContainer = new ForestBrushContainer();
+        public MainToolbarButton? m_mainToolbarButton = null;
 
-        private TreeInfo? container = null;
+        private bool m_Initialized;
+        internal bool Active => IsCurrentTreeContainer && ForestBrushPanel.Instance.isVisible;
 
-        internal TreeInfo Container
-        {
-            get
-            {
-                if (container == null)
-                {
-                    container = Instantiate(PrefabCollection<TreeInfo>.GetLoaded(0u).gameObject).GetComponent<TreeInfo>();
-                    container.gameObject.transform.parent = gameObject.transform;
-                    container.gameObject.name = "ForestBrushContainer";
-                    container.name = "ForestBrushContainer";
-                    container.m_mesh = null;
-                    container.gameObject.SetActive(false);
-                }
-                return container;
-            }
-        }
+        private static readonly string kEmptyContainer = "EmptyContainer";
+
+        private static readonly string kMainToolbarSeparatorTemplate = "MainToolbarSeparator";
+
+        private static readonly string kMainToolbarButtonTemplate = "MainToolbarButtonTemplate";
+
+        public static readonly string kToggleButton = "ForestBrushRevisited";
+
 
         internal bool IsCurrentTreeContainer
         {
             get {
-                return Container != null &&
+                return BrushContainer.Container != null &&
                     ToolsModifierControl.toolController.CurrentTool is TreeTool &&
-                    ((TreeTool)ToolsModifierControl.toolController?.CurrentTool)?.m_prefab == Container;
+                    ((TreeTool)ToolsModifierControl.toolController?.CurrentTool)?.m_prefab == BrushContainer.Container;
             }
         }
 
@@ -70,12 +65,12 @@ namespace ForestBrushRevisited
             set 
             {
                 ModSettings.Settings.ShowBrushTrees = value;
-                ModSettings.SaveSettings();
+                ModSettings.Settings.Save();
 
                 // When we toggle brush tree mode we need to clear filters
-                if (ForestBrushPanel != null)
+                if (ForestBrushPanel.Instance != null)
                 {
-                    ForestBrushPanel.BrushEditSection.SearchTextField.text = "";
+                    ForestBrushPanel.Instance.BrushEditSection.SearchTextField.text = "";
                     UpdateTreeList();
                 }
             }
@@ -83,9 +78,9 @@ namespace ForestBrushRevisited
 
         public void UpdateTreeList()
         {
-            if (ForestBrushPanel != null)
+            if (ForestBrushPanel.Instance != null)
             {
-                ForestBrushPanel.BrushEditSection.SetupFastlist();
+                ForestBrushPanel.Instance.BrushEditSection.SetupFastlist();
             }
         }
 
@@ -98,7 +93,7 @@ namespace ForestBrushRevisited
                 List<TreeInfo> brushTrees = new List<TreeInfo>();
                 foreach (TreeInfo tree in allTrees)
                 {
-                    if (ForestBrush.Instance.Container.m_variations.Any(v => v.m_finalTree == tree))
+                    if (ForestBrush.Instance.BrushContainer.Container.m_variations.Any(v => v.m_finalTree == tree))
                     {
                         brushTrees.Add(tree);
                     }
@@ -135,105 +130,58 @@ namespace ForestBrushRevisited
 
         public Dictionary<string, string> TreeAuthors { get; private set; }
 
-        public ForestBrushTool? BrushTool { get; private set; }
-
-        public UIButton ToggleButton => toggleButtonComponents.ToggleButton;
-
-        public ForestBrushPanel? ForestBrushPanel { get; private set; }
-
-        internal bool Initialized;
-
-        internal bool Active => IsCurrentTreeContainer && ForestBrushPanel.isVisible;
-
-        private static readonly string kEmptyContainer = "EmptyContainer";
-
-        private static readonly string kMainToolbarSeparatorTemplate = "MainToolbarSeparator";
-
-        private static readonly string kMainToolbarButtonTemplate = "MainToolbarButtonTemplate";
-
-        public static readonly string kToggleButton = "ForestBrushRevisited";
-
         public ForestTool Tool { get; private set; }
 
-        private ToolBase lastTool;
-
-        public void AddToolButton()
-        {
-            UITabstrip? tabstrip = ToolsModifierControl.mainToolbar.component as UITabstrip;
-            if (tabstrip != null)
-            {
-                toggleButtonComponents = CreateToggleButtonComponents(tabstrip);
-                if (toggleButtonComponents != null)
-                {
-                    ForestBrushPanel = toggleButtonComponents.TabStripPage.GetComponent<UIPanel>().AddUIComponent<ForestBrushPanel>();
-                }
-                else
-                {
-                    Debug.Log("toggleButtonComponents is null.");
-                }
-
-                BrushTool = gameObject.AddComponent<ForestBrushTool>();
-                if (BrushTool != null)
-                {
-                    if (ModSettings.Settings.SelectedBrush != null)
-                    {
-                        BrushTool.UpdateTool(ModSettings.Settings.SelectedBrush.Name);
-                    }
-                    else
-                    {
-                        Debug.Log("UserMod.Settings.SelectedBrush is null");
-                    }
-                }
-                else
-                {
-                    Debug.Log("BrushTool is null");
-                }
-            }
-        }
+        private ToolBase m_lastTool;
 
         internal void Initialize()
         {
             LoadTrees();
             LoadTreeAuthors();
-            AddToolButton();
-            SetTutorialLocale();
 
-            if (toggleButtonComponents != null)
+            if (ModSettings.Settings.MainToolbarButton || !DependencyUtils.IsUnifiedUIRunning())
             {
-                toggleButtonComponents.ToggleButton.eventClick += OnToggleClick;
+                m_mainToolbarButton = new MainToolbarButton();
+                m_mainToolbarButton.AddToolButton();
             }
-            if (ForestBrushPanel != null)
+
+            ForestBrushPanel.Init();
+
+            if (BrushContainer != null)
             {
-                ForestBrushPanel.eventVisibilityChanged += OnForestBrushPanelVisibilityChanged;
+                if (ModSettings.Settings.SelectedBrush != null)
+                {
+                    BrushContainer.UpdateTool(ModSettings.Settings.SelectedBrush.Name);
+                }
+                else
+                {
+                    Debug.Log("UserMod.Settings.SelectedBrush is null");
+                }
             }
+            else
+            {
+                Debug.Log("BrushContainer is null");
+            }
+
+            SetTutorialLocale();
             
             LocaleManager.eventLocaleChanged += SetTutorialLocale;
             Tool = ForestTool.AddSelectionTool();
-            Initialized = true;
+            m_Initialized = true;
         }
 
         internal void CleanUp()
         {
-            Initialized = false;
+            m_Initialized = false;
 
             LocaleManager.eventLocaleChanged -= SetTutorialLocale;
-            
-            if (BrushTool != null)
+            ForestBrushPanel.Instance.Destroy();
+
+            if (m_mainToolbarButton != null)
             {
-                Destroy(BrushTool.gameObject);
-            }
-            if (ForestBrushPanel != null)
-            {
-                ForestBrushPanel.eventVisibilityChanged -= OnForestBrushPanelVisibilityChanged;
-                Destroy(ForestBrushPanel.gameObject);
-            }
-            if (toggleButtonComponents != null)
-            {
-                toggleButtonComponents.ToggleButton.eventClick -= OnToggleClick;
-                DestroyToggleButtonComponents(toggleButtonComponents);
+                m_mainToolbarButton.Destroy();
             }
 
-            toggleButtonComponents = null;
             TreesMeshData = null;
             Trees = null;
 
@@ -349,25 +297,72 @@ namespace ForestBrushRevisited
             Destroy(separatorComponents.MainToolbarSeparatorTemplate.gameObject);
         }
 
-        private void OnForestBrushPanelVisibilityChanged(UIComponent component, bool visible)
+        public void ShowPanel()
         {
-            if (visible)
+            // Select tool
+            m_lastTool = ToolsModifierControl.toolController.CurrentTool;
+            ToolsModifierControl.SetTool<ForestTool>();
+
+            // Toggle main toolbar button
+            if (m_mainToolbarButton != null)
             {
-                ForestBrushPanel.ClampToScreen();
-                lastTool = ToolsModifierControl.toolController.CurrentTool;
-                ToolsModifierControl.SetTool<ForestTool>();
+                m_mainToolbarButton.Enable();
             }
-            else
+
+            // Show panel
+            ForestBrushPanel.Instance.ShowPanel();
+        }
+
+        public void HidePanel()
+        {
+            // Hide panel
+            if (ForestBrushPanel.Instance.isVisible)
             {
-                if (lastTool != null && lastTool.GetType() != typeof(TreeTool) && ToolsModifierControl.toolController.NextTool == null)
-                    lastTool.enabled = true;
+                // Toggle main toolbar button
+                if (m_mainToolbarButton != null)
+                {
+                    m_mainToolbarButton.Disable();
+                }
+
+                // Just select default tool.
+                ToolsModifierControl.SetTool<DefaultTool>();
+
+                // Show panel
+                ForestBrushPanel.Instance.HidePanel();
             }
         }
 
-        private void OnToggleClick(UIComponent component, UIMouseEventParameter eventParam)
+        public void TogglePanel()
         {
-            ForestBrushPanel.BringToFront();
-            ForestBrushPanel.isVisible = !ForestBrushPanel.isVisible;
+            if (ForestBrushPanel.Instance.isVisible)
+            {
+                HidePanel();
+            }
+            else
+            {
+                ShowPanel();
+            }
+        }
+
+        public void UpdateToolbarButton()
+        {
+            if (m_Initialized)
+            {
+                if (ModSettings.Settings.MainToolbarButton || !DependencyUtils.IsUnifiedUIRunning())
+                {
+                    if (m_mainToolbarButton == null)
+                    {
+                        m_mainToolbarButton = new MainToolbarButton();
+                    }
+
+                    m_mainToolbarButton.ShowButton();
+                }
+                else
+                {
+                    m_mainToolbarButton.HideButton();
+                    m_mainToolbarButton = null;
+                }
+            }
         }
 
         internal void LoadTrees()
@@ -378,7 +373,7 @@ namespace ForestBrushRevisited
             for (uint i = 0; i < treeCount; i++)
             {
                 var tree = PrefabCollection<TreeInfo>.GetLoaded(i);
-                if (tree == null || tree == Container || (ModSettings.Settings != null && ModSettings.Settings.IgnoreVanillaTrees && !tree.m_isCustomContent)) continue;
+                if (tree == null || tree == BrushContainer.Container || (ModSettings.Settings != null && ModSettings.Settings.IgnoreVanillaTrees && !tree.m_isCustomContent)) continue;
                 if (tree.m_availableIn != ItemClass.Availability.All)
                 {
                     tree.m_availableIn = ItemClass.Availability.All;
@@ -433,14 +428,14 @@ namespace ForestBrushRevisited
         {
             try
             {
-                if (Initialized && !UIView.HasModalInput() &&
+                if (m_Initialized && !UIView.HasModalInput() &&
                     (!UIView.HasInputFocus() || (UIView.activeComponent != null)))
                 {
                     Event e = Event.current;
 
                     if (ModSettings.Settings.ToggleTool.IsPressed(e))
                     {
-                        toggleButtonComponents.ToggleButton.SimulateClick();
+                        TogglePanel();
                     }
                 }
                 

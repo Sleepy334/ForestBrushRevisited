@@ -1,4 +1,5 @@
-﻿using ICities;
+﻿using ForestBrushRevisted.Patching;
+using ICities;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -75,14 +76,35 @@ namespace ForestBrushRevisited
 
             if (!s_loaded && ActiveInMode(mode))
             {
+                // Check for mod conflicts
+                if (ConflictingMods.ConflictingModsFound())
+                {
+                    s_loaded = false;
+                    return;
+                }
+
+                // Apply harmony patches
+                if (DependencyUtils.IsHarmonyRunning())
+                {
+                    Patcher.PatchAll();
+                }
+                
                 ForestBrush.Instance.Initialize();
                 s_loaded = true;
             }
+
+            DisplayLoadingWarnings();
         }
 
         public override void OnLevelUnloading()
         {
+            if (DependencyUtils.IsHarmonyRunning())
+            {
+                Patcher.UnpatchAll();
+            }
+
             UnloadBrush();
+
             base.OnLevelUnloading();
         }
 

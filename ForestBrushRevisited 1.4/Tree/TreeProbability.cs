@@ -14,4 +14,3 @@
         public int FloorProbability { get; }
     }
 }
-    

@@ -8,7 +8,6 @@ namespace ForestBrushRevisited.GUI
 {
     public class BrushSelectSection : UIPanel
     {
-        ForestBrushPanel owner;
         internal UIDropDown SelectBrushDropDown;
         UIButton toggleEditButton;
         UIButton toggleOptionsButton;
@@ -17,7 +16,6 @@ namespace ForestBrushRevisited.GUI
         public override void Start()
         {
             base.Start();
-            owner = (ForestBrushPanel)parent;
             height = 30f;
             autoLayout = true;
             autoLayoutDirection = LayoutDirection.Horizontal;
@@ -41,6 +39,7 @@ namespace ForestBrushRevisited.GUI
             selectBitmapButton.eventClicked -= SelectBitmapButton_eventClicked;
             base.OnDestroy();
         }
+
         private void SetupDropDown()
         {
             SelectBrushDropDown = AddUIComponent<UIDropDown>();
@@ -146,29 +145,35 @@ namespace ForestBrushRevisited.GUI
 
         private void SelectBitmapButton_eventClicked(UIComponent component, UIMouseEventParameter eventParam)
         {
-            bool shapeSelectorVisible = owner.ToggleBrushShapes();
+            bool shapeSelectorVisible = ForestBrushPanel.Instance.ToggleBrushShapes();
             selectBitmapButton.normalBgSprite = selectBitmapButton.focusedBgSprite = shapeSelectorVisible ? ResourceLoader.PaintBrushFocused : ResourceLoader.PaintBrushNormal;
-            if (shapeSelectorVisible) owner.ClampToScreen();
+            if (shapeSelectorVisible)
+            {
+                ForestBrushPanel.Instance.ClampToScreen();
+            }
             ModSettings.Settings.BrushShapesOpen = shapeSelectorVisible;
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         private void ToggleEditButton_eventClicked(UIComponent component, UIMouseEventParameter eventParam)
         {
-            bool editVisible = owner.ToggleBrushEdit();
+            bool editVisible = ForestBrushPanel.Instance.ToggleBrushEdit();
             toggleEditButton.normalBgSprite = toggleEditButton.focusedBgSprite = editVisible ? ResourceLoader.SettingsDropboxFocused : ResourceLoader.SettingsDropbox;
-            if (editVisible) owner.ClampToScreen();
+            if (editVisible)
+            {
+                ForestBrushPanel.Instance.ClampToScreen();
+            }
             ModSettings.Settings.BrushEditOpen = editVisible;
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         private void ToggleOptionsButton_eventClicked(UIComponent component, UIMouseEventParameter eventParam)
         {
-            bool optionsVisible = owner.ToggleBrushOptions();
+            bool optionsVisible = ForestBrushPanel.Instance.ToggleBrushOptions();
             toggleOptionsButton.normalBgSprite = toggleOptionsButton.focusedBgSprite = optionsVisible ? ResourceLoader.OptionsDropboxFocused : ResourceLoader.OptionsDropbox;
-            if (optionsVisible) owner.ClampToScreen();
+            if (optionsVisible) ForestBrushPanel.Instance.ClampToScreen();
             ModSettings.Settings.BrushOptionsOpen = optionsVisible;
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         internal void UpdateDropDown()
@@ -182,13 +187,13 @@ namespace ForestBrushRevisited.GUI
         private void SelectBrushDropDown_eventSelectedIndexChanged(UIComponent component, int index)
         {
             var brushName = SelectBrushDropDown.items[index];
-            ForestBrush.Instance.BrushTool.UpdateTool(brushName);
-            owner.BrushEditSection.ResetRenameError();
+            ForestBrush.Instance.BrushContainer.UpdateTool(brushName);
+            ForestBrushPanel.Instance.BrushEditSection.ResetRenameError();
 
             // Update brush list
-            if (ForestBrush.Instance.ForestBrushPanel != null)
+            if (ForestBrushPanel.Instance != null)
             {
-                ForestBrush.Instance.ForestBrushPanel.BrushEditSection.SetupFastlist();
+                ForestBrushPanel.Instance.BrushEditSection.SetupFastlist();
             }
         }
 

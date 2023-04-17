@@ -7,7 +7,6 @@ namespace ForestBrushRevisited.GUI
 {
     public class BrushShapeSelector : UIPanel
     {
-        ForestBrushPanel owner;
         private Dictionary<string, UIButton> BrushButtons = new Dictionary<string, UIButton>();
         private UIScrollablePanel ScrollablePanel;
 
@@ -20,7 +19,7 @@ namespace ForestBrushRevisited.GUI
 
             if (!ModSettings.Settings.BrushShapesOpen)
             {
-                owner.BrushSelectSection.UnfocusShapesSectionButton();
+                ForestBrushPanel.Instance.BrushSelectSection.UnfocusShapesSectionButton();
                 Hide();
             }
         }
@@ -114,8 +113,6 @@ namespace ForestBrushRevisited.GUI
             scrollbar.thumbObject = thumbSprite;
 
             ScrollablePanel.verticalScrollbar = scrollbar;
-
-            owner = (ForestBrushPanel)parent;
         }
 
         private void UpdateBrushes()

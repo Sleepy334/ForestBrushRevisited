@@ -51,7 +51,7 @@ namespace ForestBrushRevisited.GUI
             ((UISprite)includeCheckBox.checkedBoxObject).spriteName = ResourceLoader.CheckBoxSpriteChecked;
             includeCheckBox.checkedBoxObject.size = includeCheckBox.size;
             includeCheckBox.checkedBoxObject.relativePosition = Vector3.zero;
-            bool enabled = ForestBrush.Instance.Container.m_variations.Any(v => v.m_finalTree == info);
+            bool enabled = ForestBrush.Instance.BrushContainer.Container.m_variations.Any(v => v.m_finalTree == info);
             includeCheckBox.isChecked = enabled;
             includeCheckBox.eventCheckChanged += IncludeCheckBox_eventCheckChanged;
             includeCheckBox.relativePosition = new Vector3(70.0f, 15f);
@@ -183,7 +183,7 @@ namespace ForestBrushRevisited.GUI
                 probabilitySlider.value = value;
                 probabilitySlider.eventValueChanged += ProbabilitySlider_eventValueChanged;
                 SetProbability(value, Prefab);
-                ModSettings.SaveSettings();
+                ModSettings.Settings.Save();
             }
         }
 
@@ -231,12 +231,12 @@ namespace ForestBrushRevisited.GUI
         private void ProbabilitySlider_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
         {
             SetProbability(probabilitySlider.value, Prefab);
-            ModSettings.SaveSettings();
+            ModSettings.Settings.Save();
         }
 
         private void IncludeCheckBox_eventCheckChanged(UIComponent component, bool value)
         {
-            if (ForestBrush.Instance?.BrushTool?.Brush?.Trees != null && ForestBrush.Instance.BrushTool.Brush.Trees.Count >= 100 && value)
+            if (ForestBrush.Instance?.BrushContainer?.Brush?.Trees != null && ForestBrush.Instance.BrushContainer.Brush.Trees.Count >= 100 && value)
             {
                 ToggleCheckbox(false);
                 UIView.library.ShowModal<ExceptionPanel>("ExceptionPanel").SetMessage(
@@ -250,12 +250,12 @@ namespace ForestBrushRevisited.GUI
             // Check all trees if CTRL is held down when clicking the tree.
             bool checkAll = includeCheckBox.hasFocus && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.RightCommand));
             
-            ForestBrush.Instance.BrushTool.UpdateTreeList(Prefab, value, checkAll);
+            ForestBrush.Instance.BrushContainer.UpdateTreeList(Prefab, value, checkAll);
 
             // Update tree list if we are just showing brushes trees
-            if (ForestBrush.Instance.ShowBrushTrees && ForestBrush.Instance.ForestBrushPanel != null)
+            if (ForestBrush.Instance.ShowBrushTrees && ForestBrushPanel.Instance != null)
             {
-                ForestBrush.Instance.ForestBrushPanel.BrushEditSection.SetupFastlist();
+                ForestBrushPanel.Instance.BrushEditSection.SetupFastlist();
             }
         }
 
@@ -274,16 +274,16 @@ namespace ForestBrushRevisited.GUI
 
         private void SetProbability(float probability, TreeInfo info)
         {
-            Tree tree = ForestBrush.Instance.BrushTool.Brush.Trees.Find(t => t.Name == info.name);
+            Tree tree = ForestBrush.Instance.BrushContainer.Brush.Trees.Find(t => t.Name == info.name);
             if (tree != null) tree.Probability = probability;
-            tree = ForestBrush.Instance.BrushTool.Trees.Find(t => t.Name == info.name);
+            tree = ForestBrush.Instance.BrushContainer.Trees.Find(t => t.Name == info.name);
             if (tree != null) tree.Probability = probability;
-            ForestBrush.Instance.BrushTool.UpdateBrushPrefabProbabilities();
+            ForestBrush.Instance.BrushContainer.UpdateBrushPrefabProbabilities();
         }
 
         private float GetProbability(TreeInfo info, bool enabled)
         {
-            Tree tree = ForestBrush.Instance.BrushTool.Brush.Trees.Find(t => t.Name == info.name);
+            Tree tree = ForestBrush.Instance.BrushContainer.Brush.Trees.Find(t => t.Name == info.name);
             return !enabled ? 0.0f : tree != null ? tree.Probability : 100.0f;
         }
 
@@ -315,7 +315,7 @@ namespace ForestBrushRevisited.GUI
 
         public bool UpdateCheckbox()
         {
-            bool enabled = ForestBrush.Instance.Container.m_variations.Any(v => v.m_finalTree == Prefab);
+            bool enabled = ForestBrush.Instance.BrushContainer.Container.m_variations.Any(v => v.m_finalTree == Prefab);
             ToggleCheckbox(enabled);
             return enabled;
         }
