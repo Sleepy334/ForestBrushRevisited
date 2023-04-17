@@ -455,7 +455,7 @@ namespace ForestBrushRevisited
                         Randomizer tmp2 = new Randomizer(TreeManager.instance.m_treeCount + RandomModifier);
                         uint item = TreeManager.instance.m_trees.NextFreeItem(ref tmp);
                         TreeInfo treeInfo = ForestBrush.Instance.Container.GetVariation(ref tmp2);
-                        ToolErrors errors = CheckPlacementErrors(treeInfo, output.m_hitPos, item, collidingSegmentBuffer, collidingBuildingBuffer);
+                        ToolErrors errors = TreeTool.CheckPlacementErrors(treeInfo, output.m_hitPos, output.m_currentEditObject, item, collidingSegmentBuffer, collidingBuildingBuffer);
                         bool needMoney = ModSettings.Settings.ChargeMoney && (ToolManager.instance.m_properties.m_mode & ItemClass.Availability.Game) != 0;
                         if (needMoney) {
                             int cost = treeInfo.GetConstructionCost();
@@ -481,43 +481,6 @@ namespace ForestBrushRevisited
             if (ForestBrush.Instance.Container is null) return;
             if (Painting && TreeCount > 0) AddTreesImpl();
             else if (Deleting && !AxisChanged) RemoveTreesImpl();
-        }
-
-        public ToolErrors CheckPlacementErrors(TreeInfo info, Vector3 position, uint id, ulong[] collidingSegmentBuffer, ulong[] collidingBuildingBuffer) {
-            if (ShiftDown) return ToolErrors.None;
-            Randomizer tmp = new Randomizer(TreeManager.instance.m_treeCount + RandomModifier);
-            TreeInfo treeInfo = ForestBrush.Instance.Container.GetVariation(ref tmp);
-            Vector3 treePosition = MousePosition;
-            treePosition.y = Singleton<TerrainManager>.instance.SampleDetailHeight(treePosition, out float f, out float f2);
-            Randomizer treeRandomizer = new Randomizer(id);
-            float scale = treeInfo.m_minScale + treeRandomizer.Int32(10000u) * (treeInfo.m_maxScale - treeInfo.m_minScale) * 0.0001f;
-            float height = treeInfo.m_generatedInfo.m_size.y * scale;
-            float clearance = Tweaker.SingleTreeClearance;
-            Vector2 treePosition2 = VectorUtils.XZ(treePosition);
-            Quad2 quad = default(Quad2);
-            quad.a = treePosition2 + new Vector2(-clearance, -clearance);
-            quad.b = treePosition2 + new Vector2(-clearance, clearance);
-            quad.c = treePosition2 + new Vector2(clearance, clearance);
-            quad.d = treePosition2 + new Vector2(clearance, -clearance);
-            float spacing = Options.AutoDensity ? treeInfo.m_generatedInfo.m_size.x * Tweaker.SpacingFactor : Density;
-            Quad2 spacingQuad = default(Quad2);
-            spacingQuad.a = treePosition2 + new Vector2(-spacing, -spacing);
-            spacingQuad.b = treePosition2 + new Vector2(-spacing, spacing);
-            spacingQuad.c = treePosition2 + new Vector2(spacing, spacing);
-            spacingQuad.d = treePosition2 + new Vector2(spacing, -spacing);
-
-            float minY = MousePosition.y;
-            float maxY = MousePosition.y + height;
-            ItemClass.CollisionType collisionType = ItemClass.CollisionType.Terrain;
-
-            ToolErrors errors = ToolErrors.None;
-            if (PropManager.instance.OverlapQuad(quad, minY, maxY, collisionType, 0, 0)) errors |= ToolErrors.ObjectCollision;
-            if (TreeManager.instance.OverlapQuad(spacingQuad, minY, maxY, collisionType, 0, 0)) errors |= ToolErrors.ObjectCollision;
-            if (NetManager.instance.OverlapQuad(quad, minY, maxY, collisionType, info.m_class.m_layer, 0, 0, 0, collidingSegmentBuffer)) errors |= ToolErrors.ObjectCollision;
-            if (BuildingManager.instance.OverlapQuad(quad, minY, maxY, collisionType, info.m_class.m_layer, 0, 0, 0, collidingBuildingBuffer)) errors |= ToolErrors.ObjectCollision;
-            if (TerrainManager.instance.HasWater(treePosition)) errors |= ToolErrors.CannotBuildOnWater;
-            if (GameAreaManager.instance.QuadOutOfArea(quad)) errors |= ToolErrors.OutOfArea;
-            return errors;
         }
 
         private void AddTreesImpl() {
@@ -669,7 +632,7 @@ namespace ForestBrushRevisited
                 float scale = info.m_minScale + r.Int32(10000) * (info.m_maxScale - info.m_minScale) * 0.0001f;
                 float brightness = info.m_minBrightness + r.Int32(10000) * (info.m_maxBrightness - info.m_minBrightness) * 0.0001f;
 
-                TreeInstance.RenderInstance(null, info, MousePosition, scale, brightness, RenderManager.DefaultColorLocation);
+                TreeInstance.RenderInstance(null, info, MousePosition, scale, brightness, RenderManager.DefaultColorLocation, false);
             }
 
             base.RenderGeometry(cameraInfo);
