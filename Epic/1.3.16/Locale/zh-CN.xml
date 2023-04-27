@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language UniqueName="zh" ReadableName="简体中文" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2009/XMLSchema/XMLSchema.xsd">
+  <Translations>
+    <Translation ID="FOREST-BRUSH-MODDESCRIPTION" String="允许您创建、编辑和保存混合树木笔刷" />
+    <Translation ID="FOREST-BRUSH-MODNAME" String="Forest Brush Revisited" />
+    <Translation ID="FOREST-BRUSH-BRUSH" String="笔刷" />
+    <Translation ID="FOREST-BRUSH-SELECT" String="选择笔刷" />
+    <Translation ID="FOREST-BRUSH-CREATE" String="创建一个新的笔刷" />
+    <Translation ID="FOREST-BRUSH-DELETE" String="删除当前笔刷" />
+    <Translation ID="FOREST-BRUSH-SEARCH" String="搜索" />
+    <Translation ID="FOREST-BRUSH-PROBABILITY" String="可见性" />
+    <Translation ID="FOREST-BRUSH-TOGGLE-EDIT" String="切换树木面板" />
+    <Translation ID="FOREST-BRUSH-TOGGLE-OPTIONS" String="切换“笔刷选项”面板" />
+    <Translation ID="FOREST-BRUSH-TOGGLE-SELECTBRUSHSHAPE" String="切换“笔刷形状”面板" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-STRENGTH" String="强度" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-DENSITY" String="密度" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-SIZE" String="尺寸" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-AUTODENSITY" String="自动密度" />
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-RESET" String="重置" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-RESET" String="将所有选项重置为默认值" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SHOWMESHDATA" String="在工具提示中显示树木网格和纹理数据" />
+    <Translation ID="FOREST-BRUSH-DATA-NAME" String="名称" />
+    <Translation ID="FOREST-BRUSH-DATA-AUTHOR" String="作者" />
+    <Translation ID="FOREST-BRUSH-DATA-MESH" String="网格" />
+    <Translation ID="FOREST-BRUSH-DATA-MESHNOTREADABLE" String="不可读" />
+    <Translation ID="FOREST-BRUSH-DATA-TRIANGLES" String="三角形" />
+    <Translation ID="FOREST-BRUSH-DATA-TEXTURE" String="纹理" />
+    <Translation ID="FOREST-BRUSH-DATA-PIXELS" String="像素" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING" String="树木列表的排序方式" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-ORDER" String="排序的顺序" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-ASCENDING" String="升序" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-DESCENDING" String="降序" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-LOGIC" String="搜索逻辑" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-AND" String="与（匹配两个单词）" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-OR" String="或 （匹配任一单词）" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-SIMPLE" String="简易（更快的搜索树木名称）" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH" String="创建新的笔刷时" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH-CLEAR" String="从空的笔刷开始" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH-KEEP" String="保持最后一次树木笔刷的选择" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-IGNORE-VANILLA" String="隐藏原版树木" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-SINGLETREE-EFFECT" String="放置单棵树木时播放音效与显示沙尘" />
+    <Translation ID="FOREST-BRUSH-OPTIONS-CHARGE-MONEY" String="刷树时收费" />
+    <Translation ID="FOREST-BRUSH-MODAL-WARNING" String="警告" />
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-TITLE" String="已达到树木上限" />
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ONE" String="已达到此笔刷的100棵树木上限。请删除一些树木以添加更多。" />
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ALL" String="已达到此笔刷的100棵树木上限。有些树木没有添加进去，请删除一些树木以添加更多。" />
+    <Translation ID="FOREST-BRUSH-PROMPT-NEW" String="刷子名称" />
+    <Translation ID="FOREST-BRUSH-RENAME-BRUSH" String="使用此文本重命名当前笔刷。" />
+    <Translation ID="FOREST-BRUSH-PROMPT-DELETE" String="确定要永久删除此笔刷吗？" />
+    <Translation ID="FOREST-BRUSH-RENAME-ERROR" String="已经存在另一个相同的名称。" />
+    <Translation ID="FOREST-BRUSH-PROMPT-YES" String="是" />
+    <Translation ID="FOREST-BRUSH-PROMPT-NO" String="否" />
+    <Translation ID="FOREST-BRUSH-PROMPT-OK" String="确定" />
+    <Translation ID="FOREST-BRUSH-PROMPT-CANCEL" String="取消" />
+    <Translation ID="FOREST-BRUSH-KEYBIND-TOGGLE-TOOL" String="切换树木笔刷面板" />
+    <Translation ID="FOREST-BRUSH-TOOLERROR-BRUSHEMPTY" String="笔刷里没有树木" />
+    <Translation ID="FOREST-BRUSH-TUTORIAL" String="
+感谢您订阅森林笔刷。&#10;&#10;
+单击“树木”按钮为您的笔刷选择树木。&#10;
+使用复选框向笔刷添加/删除树木。&#10;
+CTRL+单击复选框以选择/取消选择所有树。&#10;&#10;
+您可以拥有任意数量的笔刷，只需使用“加号”按钮添加更多笔刷。&#10;&#10;
+使用搜索框查找特定的树。&#10;&#10;
+单击“齿轮”按钮以调整笔刷设置。&#10;
+您可以在此处更改笔刷的尺寸、强度和密度。&#10;
+访问模组的创意工坊界面以获得更详细的说明。" />
+  </Translations>
+</Language>

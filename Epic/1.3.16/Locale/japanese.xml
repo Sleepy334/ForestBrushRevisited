@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2009/XMLSchema/XMLSchema.xsd" UniqueName="ja" ReadableName="日本語">
+  <Translations>
+    <Translation ID="FOREST-BRUSH-MODDESCRIPTION" String="混合したツリーのブラシを作成・編集・保存できます"/>
+    <Translation ID="FOREST-BRUSH-MODNAME" String="Forest Brush"/>
+    <Translation ID="FOREST-BRUSH-BRUSH" String="ブラシ"/>
+    <Translation ID="FOREST-BRUSH-SELECT" String="ブラシを選択"/>
+    <Translation ID="FOREST-BRUSH-CREATE" String="新規ブラシを作成"/>
+    <Translation ID="FOREST-BRUSH-DELETE" String="現在のブラシを削除"/>
+    <Translation ID="FOREST-BRUSH-SEARCH" String="検索"/>
+    <Translation ID="FOREST-BRUSH-PROBABILITY" String="出現率"/>
+    <Translation ID="FOREST-BRUSH-TOGGLE-EDIT" String="ツリーパネルを切り替え"/>
+    <Translation ID="FOREST-BRUSH-TOGGLE-OPTIONS" String="ブラシオプションのパネルを切り替え"/>
+    <Translation ID="FOREST-BRUSH-TOGGLE-SELECTBRUSHSHAPE" String="ブラシ形状のパネルを切り替え"/>
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-STRENGTH" String="強度"/>
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-DENSITY" String="密度"/>
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-SIZE" String="サイズ"/>
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-AUTODENSITY" String=" 密度の自動調整"/>
+    <Translation ID="FOREST-BRUSH-BRUSH-OPTIONS-RESET" String="リセット"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-RESET" String="全てのオプションをリセット"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-SHOWMESHDATA" String="ツールチップにツリーのメッシュとテクスチャ情報を表示"/>
+    <Translation ID="FOREST-BRUSH-DATA-NAME" String="名前"/>
+    <Translation ID="FOREST-BRUSH-DATA-AUTHOR" String="作者"/>
+    <Translation ID="FOREST-BRUSH-DATA-MESH" String="メッシュ"/>
+    <Translation ID="FOREST-BRUSH-DATA-MESHNOTREADABLE" String="読込不可"/>
+    <Translation ID="FOREST-BRUSH-DATA-TRIANGLES" String="Triangles"/>
+    <Translation ID="FOREST-BRUSH-DATA-TEXTURE" String="テクスチャ"/>
+    <Translation ID="FOREST-BRUSH-DATA-PIXELS" String="ピクセル"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING" String="ツリーのソート方法"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-ORDER" String="ソートの順序"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-ASCENDING" String="昇順"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-SORTING-DESCENDING" String="降順"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-LOGIC" String="検索方法"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-AND" String="AND (両方で一致)"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-OR" String="OR (いずれかで一致)"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-FILTERING-SIMPLE" String="シンプル(ツリー名で検索して高速化)"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH" String="新しいブラシの作成時"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH-CLEAR" String="空のブラシで開始"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-NEWBRUSH-KEEP" String="最後のブラシ情報を保持"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-IGNORE-VANILLA" String="バニラのツリーを非表示"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-SINGLETREE-EFFECT" String="ツリーの配置時に、「音と埃」のエフェクトを再生"/>
+    <Translation ID="FOREST-BRUSH-OPTIONS-CHARGE-MONEY" String="ツリーの配置に費用が掛かる"/>
+    <Translation ID="FOREST-BRUSH-MODAL-WARNING" String="警告！"/>
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-TITLE" String="ツリーの設置制限に到達！"/>
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ONE" String="ブラシのツリー数が100本に達しました。追加したい場合はツリーを削除・整理してください。"/>
+    <Translation ID="FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ALL" String="ブラシのツリー数が100本に達しました。一部のツリーが追加できません。追加したい場合は、一部のツリーを削除して下さい"/>
+    <Translation ID="FOREST-BRUSH-PROMPT-NEW" String="ブラシ名"/>
+    <Translation ID="FOREST-BRUSH-RENAME-BRUSH" String="テキストエリアを使用して、現在のブラシ名を変更します"/>
+    <Translation ID="FOREST-BRUSH-PROMPT-DELETE" String="このブラシを完全に削除してよろしいですか？"/>
+    <Translation ID="FOREST-BRUSH-RENAME-ERROR" String="この名前のブラシは、既に存在します！"/>
+    <Translation ID="FOREST-BRUSH-PROMPT-YES" String="はい"/>
+    <Translation ID="FOREST-BRUSH-PROMPT-NO" String="いいえ"/>
+    <Translation ID="FOREST-BRUSH-PROMPT-OK" String="OK"/>
+    <Translation ID="FOREST-BRUSH-PROMPT-CANCEL" String="取消"/>
+    <Translation ID="FOREST-BRUSH-KEYBIND-TOGGLE-TOOL" String="Forest Brushのパネルを切り替え"/>
+    <Translation ID="FOREST-BRUSH-TOOLERROR-BRUSHEMPTY" String="ブラシにツリーがありません"/>
+    <Translation ID="FOREST-BRUSH-TUTORIAL" String=" Forest Brushをサブスクライブして頂きありがとうございます。 &#10;&#10; ツリーボタンをクリックして、ブラシに追加したいツリーを選択します。 &#10; チェックボックスを使用して、ブラシからツリーの追加/削除が出来ます。 &#10; CTRL + チェックボックスをクリックして、全てのツリーで選択 / 解除が出来ます。 &#10;&#10; 検索ボックスを使えば、特定のツリーを見つけられます。 &#10;&#10; ブラシの設定を編集する場合は、歯車ボタンをクリックしてください。"/>
+  </Translations>
+</Language>
