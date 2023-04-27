@@ -6,7 +6,7 @@ namespace ForestBrushRevisited
 {
     public class ForestBrushMod : IUserMod
     {
-        public static string Version = "v1.3.15";
+        public static string Version = "v1.3.16";
         public static string Title => Translation.Instance.GetTranslation("FOREST-BRUSH-MODNAME") + " " + Version;
         public string Description => Translation.Instance.GetTranslation("FOREST-BRUSH-MODDESCRIPTION");
         public string Name => Constants.ModName;

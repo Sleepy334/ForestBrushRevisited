@@ -75,6 +75,13 @@ namespace ForestBrushRevisited
 
             if (!s_loaded && ActiveInMode(mode))
             {
+                // Check for mod conflicts
+                if (ConflictingMods.ConflictingModsFound())
+                {
+                    s_loaded = false;
+                    return;
+                }
+
                 ForestBrush.Instance.Initialize();
                 s_loaded = true;
             }

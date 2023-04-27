@@ -8,6 +8,8 @@ namespace ForestBrushRevisited
         public static bool ConflictingModsFound()
         {
             string sConflictingMods = "";
+            int iForestBrushRevistedCount = 0;
+
             foreach (PluginManager.PluginInfo plugin in PluginManager.instance.GetPluginsInfo())
             {
                 if (plugin != null && plugin.isEnabled)
@@ -19,6 +21,15 @@ namespace ForestBrushRevisited
                             case "ForestBrush":
                                 {
                                     sConflictingMods += "Forest Brush\r\n";
+                                    break;
+                                }
+                            case Constants.DllName:
+                                {
+                                    iForestBrushRevistedCount++;
+                                    if (iForestBrushRevistedCount > 1)
+                                    {
+                                        sConflictingMods += "Multiple Forest Brush Revisted mods running\r\n";
+                                    }
                                     break;
                                 }
                             default:
