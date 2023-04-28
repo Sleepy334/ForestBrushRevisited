@@ -227,7 +227,7 @@ namespace ForestBrushRevisited
 
         public static UITextureAtlas? GetDefaultAtlas()
         {
-            if (ForestBrushLoader.IsGameMode())
+            if (ForestBrushRevisitedLoader.IsGameMode())
             {
                 return UIView.GetAView().defaultAtlas;
             }

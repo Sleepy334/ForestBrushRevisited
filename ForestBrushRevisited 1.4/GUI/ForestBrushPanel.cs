@@ -26,7 +26,7 @@ namespace ForestBrushRevisited.GUI
                 Instance = UIView.GetAView().AddUIComponent(typeof(ForestBrushPanel)) as ForestBrushPanel;
                 if (Instance is null)
                 {
-                    Prompt.Info(ForestBrushMod.Title, "Error creating Main Panel.");
+                    Prompt.Info(ForestBrushRevisitedMod.Title, "Error creating Main Panel.");
                 }
             }
         }

@@ -1,7 +1,6 @@
 ﻿using ColossalFramework;
 using ColossalFramework.Globalization;
 using ColossalFramework.UI;
-using ForestBrushRevisited.TranslationFramework;
 using System;
 using System.Reflection;
 using UnityEngine;
@@ -33,7 +32,7 @@ namespace ForestBrushRevisited
             uIButton.eventKeyDown += new KeyPressHandler(this.OnBindingKeyDown);
             uIButton.eventMouseDown += new MouseEventHandler(this.OnBindingMouseDown);
 
-            uILabel.text = Translation.Instance.GetTranslation(label);
+            uILabel.text = Localization.Get(label);
             uILabel.stringUserData = label;
             uIButton.text = savedInputKey.ToLocalizedString("KEYNAME");
             uIButton.objectUserData = savedInputKey;
@@ -179,7 +178,7 @@ namespace ForestBrushRevisited
                 UILabel uILabel = current.Find<UILabel>("Name");
                 if (uILabel != null)
                 {
-                    uILabel.text = Translation.Instance.GetTranslation(uILabel.stringUserData);
+                    uILabel.text = Localization.Get(uILabel.stringUserData);
                 }
             }
         }

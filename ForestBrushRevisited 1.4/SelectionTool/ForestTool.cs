@@ -3,7 +3,6 @@ using ColossalFramework.Globalization;
 using ColossalFramework.Math;
 using ColossalFramework.UI;
 using ForestBrushRevisited.GUI;
-using ForestBrushRevisited.TranslationFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -178,7 +177,7 @@ namespace ForestBrushRevisited
                 m_button = UUIHelpers.RegisterToolButton(
                     name: "ForestBrushRevisited",
                     groupName: null,
-                    tooltip: ForestBrushMod.Title,
+                    tooltip: ForestBrushRevisitedMod.Title,
                     tool: this,
                     icon: icon,
                     hotkeys: new UUIHotKeys { ActivationKey = ModSettings.Settings.ToggleTool });
@@ -398,7 +397,7 @@ namespace ForestBrushRevisited
                             ShowToolInfo(true, null, MousePosition);
                         }
                     } else {
-                        string text = Translation.Instance.GetTranslation("FOREST-BRUSH-TOOLERROR-BRUSHEMPTY");
+                        string text = Localization.Get("FOREST-BRUSH-TOOLERROR-BRUSHEMPTY");
                         ShowToolInfo(true, text, MousePosition);
                     }
                 } else ShowToolInfo(false, null, CachedPosition);

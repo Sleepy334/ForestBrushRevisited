@@ -1,5 +1,4 @@
-﻿using ColossalFramework;
-using ColossalFramework.IO;
+﻿using ColossalFramework.IO;
 using ForestBrushRevisited.Persistence;
 using ForestBrushRevisited.Settings;
 using System;
@@ -7,14 +6,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using System.Xml.Xsl;
 using UnityEngine;
 
 namespace ForestBrushRevisited
 {
+    [XmlRoot("ModSettings")] // Do not change this
     public class ModSettings
     {
         public static ModSettings Settings { get; private set; }
-        private static readonly string configurationPath = Path.Combine(DataLocation.localApplicationData, "ForestBrush.xml");
+
+        private static readonly string SettingsFilePath = Path.Combine(DataLocation.localApplicationData, "ForestBrushRevisted.xml");
+        private static readonly string OldModSettingsFilePath = Path.Combine(DataLocation.localApplicationData, "ForestBrush.xml");
+
+        public string ModVersion { get; set; }
+
+        public string PreferredLanguage { get; set; } = "System Default";
 
         public float PanelPosX { get; set; } = 200f;
 
@@ -73,6 +80,28 @@ namespace ForestBrushRevisited
         public ModSettings()
         {
             Brushes = new List<Brush>();
+        }
+
+        public ModSettings(XmlSettings oldSettings)
+        {
+            PanelPosX = oldSettings.PanelPosX;
+            PanelPosY = oldSettings.PanelPosY;
+            BrushShapesOpen = oldSettings.BrushShapesOpen;
+            BrushEditOpen = oldSettings.BrushEditOpen;
+            BrushOptionsOpen = oldSettings.BrushOptionsOpen;
+            ShowTreeMeshData = oldSettings.ShowTreeMeshData;
+            Sorting = oldSettings.Sorting;
+            SortingOrder = oldSettings.SortingOrder;
+            FilterStyle = oldSettings.FilterStyle;
+            Brushes = oldSettings.Brushes;
+            SelectBrush(oldSettings.SelectedBrush);
+            ToggleTool = new UnsavedKeyMapping(oldSettings.ToggleTool);
+            KeepTreesInNewBrush = oldSettings.KeepTreesInNewBrush;
+            IgnoreVanillaTrees = oldSettings.IgnoreVanillaTrees;
+            ShowInfoTooltip = oldSettings.ShowInfoTooltip;
+            PlayEffect = oldSettings.PlayEffect;
+            ChargeMoney = oldSettings.ChargeMoney;
+            ShowBrushTrees = oldSettings.ShowBrushTrees;
         }
 
         public static ModSettings Default()
@@ -137,16 +166,20 @@ namespace ForestBrushRevisited
         {
             try
             {
-                using (var sw = new StreamWriter(configurationPath))
+                using (var sw = new StreamWriter(SettingsFilePath))
                 {
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(ModSettings));
+
+                    // Update the version info 
+                    ModVersion = ForestBrushRevisitedMod.Version;
+
                     xmlSerializer.Serialize(sw, this);
                 }
             }
             catch (Exception ex)
             {
                 // Flag the error to display to user when level is loaded
-                string sErrorMessage = $"Error saving settings file:\n{configurationPath}\n{Debug.ToString(ex)}";
+                string sErrorMessage = $"Error saving settings file:\n{SettingsFilePath}\n{ex}";
                 Debug.Log(sErrorMessage);
                 Prompt.Info(Constants.ModName, sErrorMessage);
             }
@@ -154,11 +187,11 @@ namespace ForestBrushRevisited
 
         public static void Load()
         {
-            if (File.Exists(configurationPath))
+            if (File.Exists(SettingsFilePath))
             {
                 try
                 {
-                    using (var reader = new StreamReader(configurationPath))
+                    using (var reader = new StreamReader(SettingsFilePath))
                     {
                         XmlSerializer xmlSerializer = new XmlSerializer(typeof(ModSettings));
                         ModSettings? oSettings = xmlSerializer.Deserialize(reader) as ModSettings;
@@ -175,21 +208,47 @@ namespace ForestBrushRevisited
                     // make a backup of the file so the user doesn't lose all their brushes
                     try
                     {
-                        File.Copy(configurationPath, configurationPath + ".bad");
+                        File.Copy(SettingsFilePath, SettingsFilePath + ".bad");
                     }
                     catch (Exception)
                     {
                     }
 
-                    // Display explanatory message to user
-                    string sErrorMessage = "Error reading settings file:\n";
-                    sErrorMessage += configurationPath + "\n\n";
-                    sErrorMessage += $"Your settings file has been renamed to:\n{configurationPath}.bad\n\n";
-                    sErrorMessage += "A new settings file will be created.";
-                    Prompt.Info(Constants.ModName, sErrorMessage);
-
                     // Log the error
-                    Debug.Log(Debug.ToString(ex));
+                    string sErrorMessage = "Error reading settings file:\n";
+                    sErrorMessage += SettingsFilePath + "\n\n";
+                    sErrorMessage += $"Your settings file has been renamed to:\n{SettingsFilePath}.bad\n\n";
+                    sErrorMessage += "A new settings file will be created.";
+                    Debug.Log(sErrorMessage, ex);
+                }
+            }
+            else if (File.Exists(OldModSettingsFilePath))
+            {
+                // try to upgrade the old Forest Brush mod settings file.
+                try
+                {
+                    Debug.Log($"Reading 'ForestBrush.xml' settings");
+                    using (var reader = new StreamReader(OldModSettingsFilePath))
+                    {
+                        XmlSerializer xmlSerializer = new XmlSerializer(typeof(XmlSettings));
+                        XmlSettings? oOldSettings = xmlSerializer.Deserialize(reader) as XmlSettings;
+                        if (oOldSettings is not null)
+                        {
+                            // Convert old settings to new settings
+                            ModSettings settings = new ModSettings(oOldSettings);
+                            settings.CheckBrushes();
+
+                            // Set new settings
+                            Settings = settings;
+                            Debug.Log($"Brush Count: {Settings.Brushes.Count}");
+                            return;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the error
+                    Debug.Log("Error reading old 'ForestBrush.xml' file", ex);
                 }
             }
 

@@ -36,6 +36,7 @@
 
 
   <ItemGroup>
+    <None Remove="Locales\en.csv" />
     <None Remove="Resources\Brush icon.png" />
     <None Remove="Resources\Brushes\01.png" />
     <None Remove="Resources\Brushes\02.png" />
@@ -88,6 +89,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Locales\en.csv" />
     <EmbeddedResource Include="Resources\BrushIcon.png" />
     <EmbeddedResource Include="Resources\forestbrush" />
     <EmbeddedResource Include="Resources\ForestBrushFocused.png" />
@@ -136,7 +138,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)&quot;&#xA;del &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)\$(TargetFileName)&quot;&#xA;xcopy /y &quot;$(TargetPath)&quot; &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)&quot;&#xA;mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Locale&quot;&#xA;xcopy /y &quot;$(ProjectDir)\Locale&quot; &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Locale&quot; /s /e&#xD;&#xA;mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Resources&quot;&#xD;&#xA;mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Resources\Brushes&quot;&#xA;xcopy /y &quot;$(ProjectDir)\Resources\Brushes&quot; &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Resources\Brushes&quot; /s /e" />
+    <Exec Command="mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)&quot;&#xA;del &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)\$(TargetFileName)&quot;&#xA;xcopy /y &quot;$(TargetPath)&quot; &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)&quot;&#xA;mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Locales&quot;&#xA;xcopy /y &quot;$(ProjectDir)\Locales&quot; &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Locales&quot; /s /e&#xD;&#xA;mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Resources&quot;&#xD;&#xA;mkdir &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Resources\Brushes&quot;&#xA;xcopy /y &quot;$(ProjectDir)\Resources\Brushes&quot; &quot;$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(TargetName)\Resources\Brushes&quot; /s /e" />
   </Target>
 
 </Project>

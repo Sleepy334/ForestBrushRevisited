@@ -22,6 +22,12 @@ namespace ForestBrushRevisited.Settings
             m_Synced = true;
         }
 
+        public UnsavedKeyMapping(XmlInputKey xmlKey)
+            : base(xmlKey.Name, "ModName", xmlKey.Key, control: xmlKey.Control, shift: xmlKey.Shift, alt: xmlKey.Alt, autoUpdate: false)
+        {
+            m_Synced = true;
+        }
+
         public XmlInputKey XmlKey
         {
             get => new XmlInputKey(name, Key, Control, Shift, Alt);

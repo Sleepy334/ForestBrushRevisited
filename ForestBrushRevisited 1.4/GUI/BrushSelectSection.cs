@@ -1,5 +1,4 @@
 ﻿using ColossalFramework.UI;
-using ForestBrushRevisited.TranslationFramework;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -71,7 +70,7 @@ namespace ForestBrushRevisited.GUI
             SelectBrushDropDown.eventSelectedIndexChanged += SelectBrushDropDown_eventSelectedIndexChanged;
             SelectBrushDropDown.eventDropdownOpen += SelectBrushDropDown_eventDropdownOpen;
             SelectBrushDropDown.eventDropdownClose += SelectBrushDropDown_eventDropdownClose;
-            SelectBrushDropDown.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-SELECT");
+            SelectBrushDropDown.tooltip = Localization.Get("FOREST-BRUSH-SELECT");
         }
 
         private void SelectBrushDropDown_eventDropdownOpen(UIDropDown dropdown, UIListBox popup, ref bool overridden)
@@ -86,9 +85,9 @@ namespace ForestBrushRevisited.GUI
 
         internal void LocaleChanged()
         {
-            SelectBrushDropDown.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-SELECT");
-            toggleEditButton.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-TOGGLE-EDIT");
-            toggleOptionsButton.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-TOGGLE-OPTIONS");
+            SelectBrushDropDown.tooltip = Localization.Get("FOREST-BRUSH-SELECT");
+            toggleEditButton.tooltip = Localization.Get("FOREST-BRUSH-TOGGLE-EDIT");
+            toggleOptionsButton.tooltip = Localization.Get("FOREST-BRUSH-TOGGLE-OPTIONS");
         }
 
         internal void LoadBrush(Brush brush)
@@ -113,7 +112,7 @@ namespace ForestBrushRevisited.GUI
 
         private void SetupButtons()
         {
-            toggleEditButton = UIUtilities.CreateSmallButton(this, Translation.Instance.GetTranslation("FOREST-BRUSH-TOGGLE-EDIT"));
+            toggleEditButton = UIUtilities.CreateSmallButton(this, Localization.Get("FOREST-BRUSH-TOGGLE-EDIT"));
             toggleEditButton.zOrder = 1;
             toggleEditButton.atlas = ResourceLoader.ForestBrushAtlas;
             toggleEditButton.normalBgSprite = ResourceLoader.SettingsDropboxFocused;
@@ -122,7 +121,7 @@ namespace ForestBrushRevisited.GUI
             toggleEditButton.pressedBgSprite = ResourceLoader.SettingsDropboxPressed;
             toggleEditButton.eventClicked += ToggleEditButton_eventClicked;
 
-            toggleOptionsButton = UIUtilities.CreateSmallButton(this, Translation.Instance.GetTranslation("FOREST-BRUSH-TOGGLE-OPTIONS"));
+            toggleOptionsButton = UIUtilities.CreateSmallButton(this, Localization.Get("FOREST-BRUSH-TOGGLE-OPTIONS"));
             toggleOptionsButton.zOrder = 2;
             toggleOptionsButton.atlas = ResourceLoader.ForestBrushAtlas;
             toggleOptionsButton.normalBgSprite = ResourceLoader.OptionsDropboxFocused;
@@ -131,7 +130,7 @@ namespace ForestBrushRevisited.GUI
             toggleOptionsButton.pressedBgSprite = ResourceLoader.OptionsDropboxPressed;
             toggleOptionsButton.eventClicked += ToggleOptionsButton_eventClicked;
 
-            selectBitmapButton = UIUtilities.CreateSmallButton(this, Translation.Instance.GetTranslation("FOREST-BRUSH-TOGGLE-SELECTBRUSHSHAPE"));
+            selectBitmapButton = UIUtilities.CreateSmallButton(this, Localization.Get("FOREST-BRUSH-TOGGLE-SELECTBRUSHSHAPE"));
             selectBitmapButton.size = new Vector2(30.0f, 30.0f);
             selectBitmapButton.relativePosition = new Vector2(10.0f, 0.0f);
             selectBitmapButton.zOrder = 3;

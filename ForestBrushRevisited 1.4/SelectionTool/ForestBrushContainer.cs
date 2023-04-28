@@ -1,10 +1,7 @@
 ﻿using ColossalFramework.UI;
 using ForestBrushRevisited.GUI;
-using ForestBrushRevisited.TranslationFramework;
 using ForestBrushRevisited.Utils;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 namespace ForestBrushRevisited.SelectionTool
 {
@@ -98,8 +95,8 @@ namespace ForestBrushRevisited.SelectionTool
                 if (TreeInfos.Count == 100)
                 {
                     UIView.library.ShowModal<ExceptionPanel>("ExceptionPanel").SetMessage(
-                         Translation.Instance.GetTranslation("FOREST-BRUSH-MODAL-LIMITREACHED-TITLE"),
-                         Translation.Instance.GetTranslation("FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ALL"),
+                         Localization.Get("FOREST-BRUSH-MODAL-LIMITREACHED-TITLE"),
+                         Localization.Get("FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ALL"),
                          false);
                     break;
                 }

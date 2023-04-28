@@ -134,7 +134,7 @@ namespace ForestBrushRevisited.GUI
             if (toggleButton != null)
             {
                 toggleButton.atlas = ResourceLoader.ForestBrushAtlas;
-                toggleButton.tooltip = ForestBrushMod.Title;
+                toggleButton.tooltip = ForestBrushRevisitedMod.Title;
                 toggleButton.normalFgSprite = "ForestBrushNormal";
                 toggleButton.disabledFgSprite = "ForestBrushDisabled";
                 toggleButton.focusedFgSprite = "ForestBrushFocused";

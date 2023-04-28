@@ -1,6 +1,5 @@
 ﻿using System;
 using ColossalFramework.UI;
-using ForestBrushRevisited.TranslationFramework;
 using UnityEngine;
 
 namespace ForestBrushRevisited.GUI
@@ -79,7 +78,7 @@ namespace ForestBrushRevisited.GUI
 
             //size slider
             sizeLabel = layoutPanelSize.AddUIComponent<UILabel>();
-            sizeLabel.text = Translation.Instance.GetTranslation("FOREST-BRUSH-BRUSH-OPTIONS-SIZE");
+            sizeLabel.text = Localization.Get("FOREST-BRUSH-BRUSH-OPTIONS-SIZE");
             sizeLabel.textScale = Constants.UITextScale;
             sizeLabel.autoSize = false;
             sizeLabel.width = 80f;
@@ -126,9 +125,9 @@ namespace ForestBrushRevisited.GUI
 
         internal void LocaleChanged()
         {
-            sizeLabel.text = Translation.Instance.GetTranslation("FOREST-BRUSH-BRUSH-OPTIONS-SIZE");
-            strengthLabel.text = Translation.Instance.GetTranslation("FOREST-BRUSH-BRUSH-OPTIONS-STRENGTH");
-            densityLabel.text = Translation.Instance.GetTranslation("FOREST-BRUSH-BRUSH-OPTIONS-DENSITY");
+            sizeLabel.text = Localization.Get("FOREST-BRUSH-BRUSH-OPTIONS-SIZE");
+            strengthLabel.text = Localization.Get("FOREST-BRUSH-BRUSH-OPTIONS-STRENGTH");
+            densityLabel.text = Localization.Get("FOREST-BRUSH-BRUSH-OPTIONS-DENSITY");
             autoDensityLabel.text = AutoDensityLabelText;
         }
 
@@ -143,7 +142,7 @@ namespace ForestBrushRevisited.GUI
             layoutPanelStrength.zOrder = 1;
 
             strengthLabel = layoutPanelStrength.AddUIComponent<UILabel>();
-            strengthLabel.text = Translation.Instance.GetTranslation("FOREST-BRUSH-BRUSH-OPTIONS-STRENGTH");
+            strengthLabel.text = Localization.Get("FOREST-BRUSH-BRUSH-OPTIONS-STRENGTH");
             strengthLabel.textScale = Constants.UITextScale;
             strengthLabel.autoSize = false;
             strengthLabel.width = 80f;
@@ -199,7 +198,7 @@ namespace ForestBrushRevisited.GUI
             layoutPanelDensity.zOrder = 2;
 
             densityLabel = layoutPanelDensity.AddUIComponent<UILabel>();
-            densityLabel.text = Translation.Instance.GetTranslation("FOREST-BRUSH-BRUSH-OPTIONS-DENSITY");
+            densityLabel.text = Localization.Get("FOREST-BRUSH-BRUSH-OPTIONS-DENSITY");
             densityLabel.textScale = Constants.UITextScale;
             densityLabel.autoSize = false;
             densityLabel.width = 80f;
@@ -316,7 +315,7 @@ namespace ForestBrushRevisited.GUI
             resetButton.hoveredBgSprite = "ButtonSmallHovered";
             resetButton.pressedBgSprite = "ButtonSmallPressed";
             resetButton.focusedBgSprite = "ButtonSmall";
-            resetButton.text = Translation.Instance.GetTranslation("FOREST-BRUSH-BRUSH-OPTIONS-RESET");
+            resetButton.text = Localization.Get("FOREST-BRUSH-BRUSH-OPTIONS-RESET");
             resetButton.eventClicked += ResetButton_eventClicked;
             resetButton.autoSize = true;
         }
@@ -337,7 +336,7 @@ namespace ForestBrushRevisited.GUI
             ModSettings.Settings.Save();
         }
 
-        public string AutoDensityLabelText => Translation.Instance.GetTranslation("FOREST-BRUSH-BRUSH-OPTIONS-AUTODENSITY");
+        public string AutoDensityLabelText => Localization.Get("FOREST-BRUSH-BRUSH-OPTIONS-AUTODENSITY");
 
         internal void LoadBrush(Brush brush)
         {

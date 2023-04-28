@@ -1,5 +1,4 @@
 ﻿using ColossalFramework.UI;
-using ForestBrushRevisited.TranslationFramework;
 using UnityEngine;
 
 namespace ForestBrushRevisited.GUI
@@ -31,7 +30,7 @@ namespace ForestBrushRevisited.GUI
             icon.size = new Vector2(28f, 32f);
 
             titleLabel = AddUIComponent<UILabel>();
-            titleLabel.text = ForestBrushMod.Title;
+            titleLabel.text = ForestBrushRevisitedMod.Title;
             titleLabel.textScale = Constants.UITitleTextScale;
             titleLabel.relativePosition = new Vector3((width - titleLabel.width) / 2f, (Constants.UITitleBarHeight - titleLabel.height) / 2f);
 

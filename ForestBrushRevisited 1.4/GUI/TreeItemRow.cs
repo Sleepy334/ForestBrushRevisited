@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using ColossalFramework.UI;
-using ForestBrushRevisited.TranslationFramework;
 using UnityEngine;
 
 namespace ForestBrushRevisited.GUI
@@ -109,7 +108,7 @@ namespace ForestBrushRevisited.GUI
             probabilityTextField.eventKeyPress += ProbabilityTextField_eventKeyPress;
             probabilityTextField.eventLostFocus += ProbabilityTextField_eventLostFocus;
             probabilityTextField.eventGotFocus += ProbabilityTextField_eventGotFocus;
-            probabilityTextField.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-PROBABILITY");
+            probabilityTextField.tooltip = Localization.Get("FOREST-BRUSH-PROBABILITY");
             probabilityTextField.isEnabled = includeCheckBox.isChecked;
             float probability = GetProbability(info, enabled);
             probabilitySlider.value = probability;
@@ -154,11 +153,11 @@ namespace ForestBrushRevisited.GUI
                         string[] split = Prefab.name.Split('.');
                         if (split.Length > 0 && ForestBrush.Instance.TreeAuthors.TryGetValue(split[0], out author))
                         {
-                            author = string.Concat(Translation.Instance.GetTranslation("FOREST-BRUSH-DATA-AUTHOR"), ": ", author);
+                            author = string.Concat(Localization.Get("FOREST-BRUSH-DATA-AUTHOR"), ": ", author);
                         }
                     }
-                    string trisString = string.Concat(Translation.Instance.GetTranslation("FOREST-BRUSH-DATA-MESH"), ": ", meshData.triangles == 0 ? Translation.Instance.GetTranslation("FOREST-BRUSH-DATA-MESHNOTREADABLE") : string.Concat(meshData.triangles, " ", Translation.Instance.GetTranslation("FOREST-BRUSH-DATA-TRIANGLES")));
-                    string textureString = string.Concat(Translation.Instance.GetTranslation("FOREST-BRUSH-DATA-TEXTURE"), ": ", meshData.textureSize.x, "x", meshData.textureSize.y, Translation.Instance.GetTranslation("FOREST-BRUSH-DATA-PIXELS"));
+                    string trisString = string.Concat(Localization.Get("FOREST-BRUSH-DATA-MESH"), ": ", meshData.triangles == 0 ? Localization.Get("FOREST-BRUSH-DATA-MESHNOTREADABLE") : string.Concat(meshData.triangles, " ", Localization.Get("FOREST-BRUSH-DATA-TRIANGLES")));
+                    string textureString = string.Concat(Localization.Get("FOREST-BRUSH-DATA-TEXTURE"), ": ", meshData.textureSize.x, "x", meshData.textureSize.y, Localization.Get("FOREST-BRUSH-DATA-PIXELS"));
                     tooltip = string.Concat(!string.IsNullOrEmpty(author) ? string.Concat(author, "\n") : "", textureString, "\n", trisString);
                 }
             }
@@ -171,7 +170,7 @@ namespace ForestBrushRevisited.GUI
 
         internal void LocaleChanged()
         {
-            probabilityTextField.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-PROBABILITY");
+            probabilityTextField.tooltip = Localization.Get("FOREST-BRUSH-PROBABILITY");
             GenerateTooltip(Prefab);
         }
 
@@ -240,8 +239,8 @@ namespace ForestBrushRevisited.GUI
             {
                 ToggleCheckbox(false);
                 UIView.library.ShowModal<ExceptionPanel>("ExceptionPanel").SetMessage(
-                 Translation.Instance.GetTranslation("FOREST-BRUSH-MODAL-LIMITREACHED-TITLE"),
-                 Translation.Instance.GetTranslation("FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ONE"),
+                 Localization.Get("FOREST-BRUSH-MODAL-LIMITREACHED-TITLE"),
+                 Localization.Get("FOREST-BRUSH-MODAL-LIMITREACHED-MESSAGE-ONE"),
                  false);
                 return;
             }

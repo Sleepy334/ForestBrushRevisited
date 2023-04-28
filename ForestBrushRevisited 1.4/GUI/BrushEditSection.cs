@@ -1,5 +1,4 @@
 ﻿using ColossalFramework.UI;
-using ForestBrushRevisited.TranslationFramework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -126,10 +125,10 @@ namespace ForestBrushRevisited.GUI
 
         internal void LocaleChanged()
         {
-            createBrushButton.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-CREATE");
-            deleteBrushButton.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-DELETE");
-            renameBrushTextField.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-RENAME-BRUSH");
-            searchLabel.text = Translation.Instance.GetTranslation("FOREST-BRUSH-SEARCH");
+            createBrushButton.tooltip = Localization.Get("FOREST-BRUSH-CREATE");
+            deleteBrushButton.tooltip = Localization.Get("FOREST-BRUSH-DELETE");
+            renameBrushTextField.tooltip = Localization.Get("FOREST-BRUSH-RENAME-BRUSH");
+            searchLabel.text = Localization.Get("FOREST-BRUSH-SEARCH");
             foreach (TreeItemRow item in TreesList.rowsData)
             {
                 item?.LocaleChanged();
@@ -166,12 +165,12 @@ namespace ForestBrushRevisited.GUI
 
         private void SetupButtons()
         {
-            createBrushButton = UIUtilities.CreateSmallButton(topPanel, Translation.Instance.GetTranslation("FOREST-BRUSH-CREATE"));
+            createBrushButton = UIUtilities.CreateSmallButton(topPanel, Localization.Get("FOREST-BRUSH-CREATE"));
             createBrushButton.zOrder = 1;
             createBrushButton.text = "+";
             createBrushButton.eventClicked += CreateBrushButton_eventClicked;
 
-            deleteBrushButton = UIUtilities.CreateSmallButton(topPanel, Translation.Instance.GetTranslation("FOREST-BRUSH-DELETE"));
+            deleteBrushButton = UIUtilities.CreateSmallButton(topPanel, Localization.Get("FOREST-BRUSH-DELETE"));
             deleteBrushButton.textPadding = new RectOffset(0, 0, 0, 1);
             deleteBrushButton.zOrder = 2;
             deleteBrushButton.text = "-";
@@ -201,7 +200,7 @@ namespace ForestBrushRevisited.GUI
             renameBrushTextField.eventTextChanged += RenameBrushTextField_eventTextChanged;
             renameBrushTextField.eventKeyPress += RenameBrushTextField_eventKeyPress;
             renameBrushTextField.eventLostFocus += RenameBrushTextField_eventLostFocus;
-            renameBrushTextField.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-RENAME-BRUSH");
+            renameBrushTextField.tooltip = Localization.Get("FOREST-BRUSH-RENAME-BRUSH");
         }
 
         private void SetupListSection()
@@ -235,7 +234,7 @@ namespace ForestBrushRevisited.GUI
         {
             searchLabel = bottomPanel.AddUIComponent<UILabel>();
             searchLabel.zOrder = 0;
-            searchLabel.text = Translation.Instance.GetTranslation("FOREST-BRUSH-SEARCH");
+            searchLabel.text = Localization.Get("FOREST-BRUSH-SEARCH");
             searchLabel.padding = new RectOffset(0, 0, 8, 0);
             searchLabel.textScale = Constants.UITitleTextScale;
             searchLabel.verticalAlignment = UIVerticalAlignment.Middle;
@@ -302,7 +301,7 @@ namespace ForestBrushRevisited.GUI
 
         private void DeleteBrushButton_eventClicked(UIComponent component, UIMouseEventParameter mouseEventParameter)
         {
-            ConfirmPanel.ShowModal(Translation.Instance.GetTranslation("FOREST-BRUSH-MODAL-WARNING"), Translation.Instance.GetTranslation("FOREST-BRUSH-PROMPT-DELETE"), (d, i) =>
+            ConfirmPanel.ShowModal(Localization.Get("FOREST-BRUSH-MODAL-WARNING"), Localization.Get("FOREST-BRUSH-PROMPT-DELETE"), (d, i) =>
             {
                 if (i == 1)
                 {
@@ -334,13 +333,13 @@ namespace ForestBrushRevisited.GUI
         private void SetRenameError()
         {
             renameBrushTextField.textColor = Color.red;
-            renameBrushTextField.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-RENAME-ERROR");
+            renameBrushTextField.tooltip = Localization.Get("FOREST-BRUSH-RENAME-ERROR");
         }
 
         public void ResetRenameError()
         {
             renameBrushTextField.textColor = new Color32(0, 0, 0, 255);
-            renameBrushTextField.tooltip = Translation.Instance.GetTranslation("FOREST-BRUSH-RENAME-BRUSH");
+            renameBrushTextField.tooltip = Localization.Get("FOREST-BRUSH-RENAME-BRUSH");
         }
 
         private void SearchTextField_eventTextChanged(UIComponent component, string text)

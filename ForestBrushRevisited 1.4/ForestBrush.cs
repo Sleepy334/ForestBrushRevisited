@@ -7,7 +7,6 @@ using ColossalFramework.Packaging;
 using ColossalFramework.PlatformServices;
 using ColossalFramework.UI;
 using ForestBrushRevisited.GUI;
-using ForestBrushRevisited.TranslationFramework;
 using UnityEngine;
 using System.Linq;
 using ForestBrushRevisited.SelectionTool;
@@ -24,7 +23,7 @@ namespace ForestBrushRevisited
             {
                 if (s_Instance == null)
                 {
-                    s_Instance = ForestBrushLoader.GameObject().AddComponent<ForestBrush>();
+                    s_Instance = ForestBrushRevisitedLoader.GameObject().AddComponent<ForestBrush>();
                 }
 
                 return s_Instance;
@@ -200,7 +199,7 @@ namespace ForestBrushRevisited
             if (toggleButton != null)
             {
                 toggleButton.atlas = ResourceLoader.ForestBrushAtlas;
-                toggleButton.tooltip = ForestBrushMod.Title;
+                toggleButton.tooltip = ForestBrushRevisitedMod.Title;
                 toggleButton.normalFgSprite = "ForestBrushNormal";
                 toggleButton.disabledFgSprite = "ForestBrushDisabled";
                 toggleButton.focusedFgSprite = "ForestBrushFocused";
@@ -252,7 +251,7 @@ namespace ForestBrushRevisited
             };
             if (!locale.Exists(tutorialAdviserTitleKey))
             {
-                locale.AddLocalizedString(tutorialAdviserTitleKey, Translation.Instance.GetTranslation("FOREST-BRUSH-MODNAME"));
+                locale.AddLocalizedString(tutorialAdviserTitleKey, Localization.Get("FOREST-BRUSH-MODNAME"));
             }
 
             Locale.Key tutorialAdviserKey = new Locale.Key
@@ -262,7 +261,7 @@ namespace ForestBrushRevisited
             };
             if (!locale.Exists(tutorialAdviserKey))
             {
-                locale.AddLocalizedString(tutorialAdviserKey, "");
+                locale.AddLocalizedString(tutorialAdviserKey, Localization.Get("FOREST-BRUSH-TUTORIAL"));
             }
         }
 
