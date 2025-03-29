@@ -54,6 +54,14 @@ namespace ForestBrushRevisited.Settings
                 ForestBrush.Instance.UpdateToolbarButton();
             });
 
+            groupGeneral.AddCheckbox("Use Unified UI", ModSettings.Settings.UnifiedUI, (b) =>
+            {
+                ModSettings.Settings.UnifiedUI = b;
+                ModSettings.Settings.Save();
+
+                ForestBrush.Instance.Tool.UpdateUnifiedUI();
+            });
+
             // Interface
             UIHelper groupMainPanel = helper.AddGroup(Localization.Get("groupMainPanel")) as UIHelper;
 

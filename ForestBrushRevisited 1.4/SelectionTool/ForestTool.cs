@@ -181,6 +181,8 @@ namespace ForestBrushRevisited
                     tool: this,
                     icon: icon,
                     hotkeys: new UUIHotKeys { ActivationKey = ModSettings.Settings.ToggleTool });
+
+                UpdateUnifiedUI();
             }
         }
 
@@ -808,5 +810,13 @@ namespace ForestBrushRevisited
             StrengthMultiplier = 10,
             _maxSize = 1000f
         };
+
+        public void UpdateUnifiedUI()
+        {
+            if (m_button != null)
+            {
+                m_button.isVisible = ModSettings.Settings.UnifiedUI && DependencyUtils.IsUnifiedUIRunning();
+            }
+        }
     }
 }
