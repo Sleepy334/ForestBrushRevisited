@@ -59,6 +59,8 @@ namespace ForestBrushRevisited
 
         public bool MainToolbarButton { get; set; } = true;
 
+        public bool AddUnifiedUIButton { get; set; } = true; 
+
         [XmlIgnore]
         public UnsavedKeyMapping ToggleTool = new UnsavedKeyMapping(
             "toggleTool",
