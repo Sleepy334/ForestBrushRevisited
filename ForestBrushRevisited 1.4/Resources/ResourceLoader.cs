@@ -62,19 +62,6 @@ namespace ForestBrushRevisited
         private static UITextureAtlas? s_atlas = null;
         private static UITextureAtlas? s_forestBrushAtlas = null;
 
-        public static Shader? Shader
-        {
-            get
-            {
-                if (s_shader == null)
-                {
-                    s_shader = LoadCustomShaderFromBundle();
-                }
-                
-                return s_shader;
-            }
-        }
-
         public static UITextureAtlas? Atlas
         {
             get
@@ -315,37 +302,6 @@ namespace ForestBrushRevisited
             return dict;
         }
 
-        private static Shader? LoadCustomShaderFromBundle()
-        {
-            string bundleName;
-            switch (Application.platform)
-            {
-                case RuntimePlatform.OSXPlayer:
-                    bundleName = "ForestBrushRevisited.Resources.forestbrushmac";
-                    break;
-                case RuntimePlatform.LinuxPlayer:
-                    bundleName = "ForestBrushRevisited.Resources.forestbrushlinux";
-                    break;
-                default:
-                    bundleName = "ForestBrushRevisited.Resources.forestbrush";
-                    break;
-            }
-
-            byte[]? bytes = ExtractResource(bundleName);
-            if (bytes != null && bytes.Length > 0)
-            {
-                AssetBundle shaderBundle = AssetBundle.LoadFromMemory(bytes);
-                Shader shader = shaderBundle.LoadAsset<Shader>("Assets/Shader/ForestBrush.shader");
-                shaderBundle.Unload(false);
-                return shader;
-            }
-            else
-            {
-                Prompt.Info(Constants.ModName, $"Failed to find shader bundle: '{bundleName}'.");
-                return null;
-            }
-        }
-
         public static byte[]? ExtractResource(string filename)
         {
             Assembly a = Assembly.GetExecutingAssembly();
@@ -407,6 +363,50 @@ namespace ForestBrushRevisited
             RenderTexture.active = active;
 
             RenderTexture.ReleaseTemporary(renderTexture);
+        }
+
+        public static Shader? Shader
+        {
+            get
+            {
+                if (s_shader == null)
+                {
+                    s_shader = LoadCustomShaderFromBundle();
+                }
+
+                return s_shader;
+            }
+        }
+
+        private static Shader? LoadCustomShaderFromBundle()
+        {
+            string bundleName;
+            switch (Application.platform)
+            {
+                case RuntimePlatform.OSXPlayer:
+                    bundleName = "ForestBrushRevisited.Resources.Shaders.forestbrushmac";
+                    break;
+                case RuntimePlatform.LinuxPlayer:
+                    bundleName = "ForestBrushRevisited.Resources.Shaders.forestbrushlinux";
+                    break;
+                default:
+                    bundleName = "ForestBrushRevisited.Resources.Shaders.forestbrush";
+                    break;
+            }
+
+            byte[]? bytes = ExtractResource(bundleName);
+            if (bytes != null && bytes.Length > 0)
+            {
+                AssetBundle shaderBundle = AssetBundle.LoadFromMemory(bytes);
+                Shader shader = shaderBundle.LoadAsset<Shader>("Assets/Shader/ForestBrush.shader");
+                shaderBundle.Unload(false);
+                return shader;
+            }
+            else
+            {
+                Prompt.Info(Constants.ModName, $"Failed to find shader bundle: '{bundleName}'.");
+                return null;
+            }
         }
     }
 }

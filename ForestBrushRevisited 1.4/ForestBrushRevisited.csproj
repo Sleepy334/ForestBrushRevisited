@@ -51,11 +51,8 @@
     <None Remove="Resources\Brushes\11.png" />
     <None Remove="Resources\Brushes\12.png" />
     <None Remove="Resources\BrushIcon.png" />
-    <None Remove="Resources\forestbrush" />
     <None Remove="Resources\ForestBrushFocused.png" />
     <None Remove="Resources\ForestBrushHovered.png" />
-    <None Remove="Resources\forestbrushlinux" />
-    <None Remove="Resources\forestbrushmac" />
     <None Remove="Resources\ForestBrushNormal.png" />
     <None Remove="Resources\ForestBrushPressed.png" />
     <None Remove="Resources\OptionsDropbox.png" />
@@ -71,6 +68,9 @@
     <None Remove="Resources\SettingsDropboxFocused.png" />
     <None Remove="Resources\SettingsDropboxHovered.png" />
     <None Remove="Resources\SettingsDropboxPressed.png" />
+    <None Remove="Resources\Shaders\forestbrush" />
+    <None Remove="Resources\Shaders\forestbrushlinux" />
+    <None Remove="Resources\Shaders\forestbrushmac" />
   </ItemGroup>
 
   <ItemGroup>
@@ -91,11 +91,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Locales\en.csv" />
     <EmbeddedResource Include="Resources\BrushIcon.png" />
-    <EmbeddedResource Include="Resources\forestbrush" />
     <EmbeddedResource Include="Resources\ForestBrushFocused.png" />
     <EmbeddedResource Include="Resources\ForestBrushHovered.png" />
-    <EmbeddedResource Include="Resources\forestbrushlinux" />
-    <EmbeddedResource Include="Resources\forestbrushmac" />
     <EmbeddedResource Include="Resources\ForestBrushNormal.png" />
     <EmbeddedResource Include="Resources\ForestBrushPressed.png" />
     <EmbeddedResource Include="Resources\OptionsDropbox.png" />
@@ -111,6 +108,9 @@
     <EmbeddedResource Include="Resources\SettingsDropboxFocused.png" />
     <EmbeddedResource Include="Resources\SettingsDropboxHovered.png" />
     <EmbeddedResource Include="Resources\SettingsDropboxPressed.png" />
+    <EmbeddedResource Include="Resources\Shaders\forestbrush" />
+    <EmbeddedResource Include="Resources\Shaders\forestbrushlinux" />
+    <EmbeddedResource Include="Resources\Shaders\forestbrushmac" />
   </ItemGroup>
 
   <ItemGroup>
@@ -118,7 +118,7 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="CitiesHarmony.Harmony">
-      <HintPath>..\..\References\CitiesHarmony.Harmony.dll</HintPath>
+      <HintPath>..\..\Assemblies\CitiesHarmony.Harmony.dll</HintPath>
     </Reference>
     <Reference Include="ColossalManaged">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\ColossalManaged.dll</HintPath>

@@ -16,7 +16,6 @@ namespace ForestBrushRevisited
     {
         private static readonly string kCursorInfoNormalColor = "<color #87d3ff>";
         private static readonly string kCursorInfoCloseColorTag = "</color>";
-        private float Angle = ToolsModifierControl.cameraController.m_currentAngle.x;
         private bool AxisChanged;
         private float MouseRayLength;
         private bool MouseLeftDown;
@@ -60,15 +59,15 @@ namespace ForestBrushRevisited
         public int ID_BrushWS { get; private set; }
         public int ID_Color1 { get; private set; }
         public int ID_Color2 { get; private set; }
-
         private int RandomModifier { get; set; } = 1;
-
         public Material BrushMaterial { get; private set; }
         private Mesh BoxMesh { get; set; }
         private Dictionary<string, Texture2D> Brushes { get; set; }
-        private Shader Shader => ResourceLoader.Shader;
-
         public Texture2D BrushTexture { get; set; }
+
+        // Brush rotation support
+        private Shader Shader => ResourceLoader.Shader;
+        private float Angle = ToolsModifierControl.cameraController.m_currentAngle.x;
 
         public static ForestTool AddSelectionTool()
         {
@@ -107,7 +106,8 @@ namespace ForestBrushRevisited
         protected override void Awake() {
             base.Awake();
             enabled = false;
-            BoxMesh = RenderManager.instance.OverlayEffect.GetType().GetField("m_boxMesh", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(RenderManager.instance.OverlayEffect) as Mesh;
+
+            BoxMesh = LoadBoxMesh();
             BrushData = new float[128 * 128];
             Brushes = ResourceLoader.LoadBrushTextures();
             ID_BrushTex = Shader.PropertyToID("_BrushTex");
@@ -115,7 +115,18 @@ namespace ForestBrushRevisited
             ID_Angle = Shader.PropertyToID("_Angle");
             ID_Color1 = Shader.PropertyToID("_TerrainBrushColor1");
             ID_Color2 = Shader.PropertyToID("_TerrainBrushColor2");
-            BrushMaterial = new Material(ToolsModifierControl.toolController.m_brushMaterial) { shader = Shader };
+
+            // Only load the rotation shader for DirectX.
+            if (SystemInfo.graphicsDeviceVersion.Contains("Direct3D"))
+            {
+                BrushMaterial = new Material(ToolsModifierControl.toolController.m_brushMaterial) { shader = Shader };
+            }
+            else
+            {
+                BrushMaterial = new Material(ToolsModifierControl.toolController.m_brushMaterial);
+            }
+            
+
             Randomizer = new Randomizer((int)DateTime.Now.Ticks);
 
             FieldInfo fieldInfo = typeof(ToolController).GetField("m_tools", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -145,7 +156,7 @@ namespace ForestBrushRevisited
                         int iIndex = -1;
                         foreach (ToolBase existing in tools)
                         {
-                            if (existing is ForestBrush)
+                            if (existing is ForestTool)
                             {
                                 break;
                             }
@@ -184,6 +195,30 @@ namespace ForestBrushRevisited
             }
         }
 
+        private Mesh LoadBoxMesh()
+        {
+            Mesh boxMesh = null;
+            if (RenderManager.instance.OverlayEffect is not null)
+            {
+                FieldInfo? info = RenderManager.instance.OverlayEffect.GetType().GetField("m_boxMesh", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (info is not null)
+                {
+                    Mesh mesh = info.GetValue(RenderManager.instance.OverlayEffect) as Mesh;
+                    if (mesh is not null)
+                    {
+                        boxMesh = mesh;
+                    }
+                }
+            }
+
+            if (boxMesh is null)
+            {
+                Debug.Log($"ERROR: Unable to load BoxMesh.");
+            }
+
+            return boxMesh;
+        }
+
         protected override void OnDestroy()
         {
             base.OnDestroy();
@@ -196,6 +231,7 @@ namespace ForestBrushRevisited
                 fieldInfo.SetValue(ToolsModifierControl.toolController, tools.ToArray());
                 Dictionary<Type, ToolBase> dictionary = (Dictionary<Type, ToolBase>)typeof(ToolsModifierControl).GetField("m_Tools", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
                 dictionary.Remove(typeof(ForestTool));
+
                 if (BrushMaterial != null) 
                 {
                     Destroy(BrushMaterial);
@@ -384,7 +420,7 @@ namespace ForestBrushRevisited
             if (MouseRayValid) {
                 if (ModSettings.Settings.ShowInfoTooltip && (CtrlDown || AltDown)) {
                     string density = Options.AutoDensity ? "Auto" : string.Concat(Math.Round((16 - Options.Density) * 6.451612903225806f, 1, MidpointRounding.AwayFromZero), "%");
-                    string text = $"Trees: {ForestBrush.Instance.BrushContainer.Container.m_variations.Length}\nSize: {Options.Size}\nStrength: { Math.Round(Options.Strength * 100, 1) + "%"}\nDensity: {density}";
+                    string text = $"Trees: {ForestBrush.Instance.BrushContainer.Container.m_variations.Length}\nSize: {Options.Size}\nStrength: {Math.Round(Options.Strength * 100, 1)}%\nSlope: {Options.SlopeLimit}%\nDensity: {density}";
                     ShowInfo(true, text);
                 } else if (Size == 1.0f) {
                     if (TreeCount > 0) {
@@ -541,7 +577,6 @@ namespace ForestBrushRevisited
                 Vector2 randomPosition = UnityEngine.Random.insideUnitCircle;
                 Vector3 treePosition = MousePosition + new Vector3(randomPosition.x, 0f, randomPosition.y) * Size;
 
-
                 var distance = treePosition - MousePosition;
                 var distanceRotated = Quaternion.Euler(0, Angle, 0) * distance;
 
@@ -566,8 +601,15 @@ namespace ForestBrushRevisited
 
                 if (Randomizer.Int32(10000) < change) {
                     TreeInfo treeInfo = ForestBrush.Instance.BrushContainer.Container.GetVariation(ref Randomizer);
+                    treePosition.y = Singleton<TerrainManager>.instance.SampleDetailHeight(treePosition, out float slopeX, out float slopeZ);
 
-                    treePosition.y = Singleton<TerrainManager>.instance.SampleDetailHeight(treePosition, out float f, out float f2);
+                    // Slope limit check
+                    float fMaxSlope = Mathf.Max(Mathf.Abs(slopeX), Mathf.Abs(slopeZ));
+                    if (fMaxSlope > (Options.SlopeLimit * 0.01f))
+                    {
+                        continue;
+                    }
+
                     float spacing = Options.AutoDensity ? treeInfo.m_generatedInfo.m_size.x * Tweaker.SpacingFactor : Density;
                     Randomizer tempRandomizer = Randomizer;
                     uint item = TreeManager.instance.m_trees.NextFreeItem(ref tempRandomizer);
@@ -595,6 +637,7 @@ namespace ForestBrushRevisited
                     if (NetManager.instance.OverlapQuad(clearanceQuad, minY, maxY, collisionType, treeInfo.m_class.m_layer, 0, 0, 0)) continue;
                     if (BuildingManager.instance.OverlapQuad(clearanceQuad, minY, maxY, collisionType, treeInfo.m_class.m_layer, 0, 0, 0)) continue;
                     if (TerrainManager.instance.HasWater(treePosition2) && !ShiftDown) continue;
+
                     int noiseScale = Randomizer.Int32(16);
                     float str2Rnd = UnityEngine.Random.Range(0.0f, Tweaker.MaxRandomRange);
                     if (Mathf.PerlinNoise(treePosition.x * noiseScale, treePosition.y * noiseScale) > 0.5 && str2Rnd < Strength * Tweaker.StrengthMultiplier) {
@@ -734,6 +777,7 @@ namespace ForestBrushRevisited
             {
                 Vector4 position = BrushPosition;
                 position.w = Size;
+
                 BrushMaterial.SetTexture(ID_BrushTex, BrushTexture);
                 BrushMaterial.SetVector(this.ID_BrushWS, position);
                 BrushMaterial.SetFloat(ID_Angle, Angle);
