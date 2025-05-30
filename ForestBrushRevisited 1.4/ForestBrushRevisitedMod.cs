@@ -1,11 +1,20 @@
 ﻿using ForestBrushRevisited.Settings;
 using ICities;
+using System;
+using System.Reflection;
 
 namespace ForestBrushRevisited
 {
     public class ForestBrushRevisitedMod : IUserMod
     {
-        public static string Version = "1.4.7";
+        public static string Version
+        {
+            get
+            {
+                Version version = Assembly.GetExecutingAssembly().GetName().Version;
+                return $"{version.Major}.{version.Minor}.{version.Build}";
+            }
+        }
 
 #if TEST_RELEASE || TEST_DEBUG
         private static string Edition => " TEST";

@@ -43,6 +43,7 @@ namespace ForestBrushRevisited
             public float Size { get; set; }
             public float Strength { get; set; }
             public float Density { get; set; }
+            public int SlopeLimit { get; set; } = 36;
             public bool AutoDensity { get; set; }
             public string BitmapID { get; set; }
 
@@ -53,6 +54,7 @@ namespace ForestBrushRevisited
                     Size = 150f,
                     Strength = 0.2f,
                     Density = 8f,
+                    SlopeLimit = 40,
                     AutoDensity = true,
                     BitmapID = string.Empty
                 };

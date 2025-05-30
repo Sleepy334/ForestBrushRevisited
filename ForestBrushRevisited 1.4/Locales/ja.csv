@@ -52,7 +52,7 @@
 "FOREST-BRUSH-PROMPT-CANCEL","取消"
 "FOREST-BRUSH-KEYBIND-TOGGLE-TOOL","Forest Brushのパネルを切り替え"
 "FOREST-BRUSH-TOOLERROR-BRUSHEMPTY","ブラシにツリーがありません"
-"FOREST-BRUSH-TUTORIAL","Thanks for subscribing to Forest Brush Revisted.\r\n\r\nClick on the 'Trees' button to select the trees for your brush.\r\nUse the checkboxes to add/remove trees to the brush.\r\nCTRL + click on a checkbox to select/deselect all trees.\r\n\r\nYou can have as many different brushes as you like, just add more with the 'plus' button.\r\n\r\nUse the searchbox to find specific trees.\r\nClick on the 'Gear' button to edit your brush settings.\r\nHere you can change the size, strength and density of your brush.\r\nVisit the mod's workshop page for detailed instructions."
+"FOREST-BRUSH-TUTORIAL","Forest Brush Revistedをサブスクして頂きありがとうございます。\r\n\r\n・ツリーボタンをクリックして、ブラシに追加したいツリーを選択します。\r\n・チェックボックスを使用して、ブラシからツリーの追加や削除が出来ます。\r\n\r\n・CTRL + チェックボックスをクリックして、全てのツリーで選択や解除が出来ます。\r\n\r\n・ブラシは何種類でも追加可能で、「プラス」ボタンで追加が出来ます。\r\n・検索ボックスを使えば、特定のツリーを見つけられます。\r\n・ブラシの設定を編集する場合は、歯車ボタンをクリックして下さい。\r\n・ブラシのサイズ・強度・密度を変更できます。\r\n詳細はMODのワークショップのページを確認して下さい。"
 "NAME","日本語"
 "GROUP_LOCALISATION","翻訳"
 "dropdownLocalization","言語"
@@ -65,3 +65,4 @@
 "groupSearching","検索"
 "groupMaintenance","メンテナンス"
 "buttonResetPanelPosition","パネルの位置をリセット"
+"sliderSlopeLimit","傾斜制限"

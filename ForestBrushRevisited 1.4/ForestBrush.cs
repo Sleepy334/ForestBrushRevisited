@@ -31,7 +31,6 @@ namespace ForestBrushRevisited
         }
 
         public ForestBrushContainer? BrushContainer = new ForestBrushContainer();
-        public MainToolbarButton? m_mainToolbarButton = null;
 
         private bool m_Initialized;
         internal bool Active => IsCurrentTreeContainer && ForestBrushPanel.Instance.isVisible;
@@ -138,12 +137,6 @@ namespace ForestBrushRevisited
             LoadTrees();
             LoadTreeAuthors();
 
-            if (ModSettings.Settings.MainToolbarButton || !DependencyUtils.IsUnifiedUIRunning())
-            {
-                m_mainToolbarButton = new MainToolbarButton();
-                m_mainToolbarButton.AddToolButton();
-            }
-
             ForestBrushPanel.Init();
 
             if (BrushContainer != null)
@@ -176,9 +169,9 @@ namespace ForestBrushRevisited
             LocaleManager.eventLocaleChanged -= SetTutorialLocale;
             ForestBrushPanel.Instance.Destroy();
 
-            if (m_mainToolbarButton != null)
+            if (MainToolbarButton.Exists)
             {
-                m_mainToolbarButton.Destroy();
+                MainToolbarButton.Instance.Destroy();
             }
 
             TreesMeshData = null;
@@ -296,70 +289,17 @@ namespace ForestBrushRevisited
             Destroy(separatorComponents.MainToolbarSeparatorTemplate.gameObject);
         }
 
-        public void ShowPanel()
-        {
-            // Select tool
-            m_lastTool = ToolsModifierControl.toolController.CurrentTool;
-            ToolsModifierControl.SetTool<ForestTool>();
-
-            // Toggle main toolbar button
-            if (m_mainToolbarButton != null)
-            {
-                m_mainToolbarButton.Enable();
-            }
-
-            // Show panel
-            ForestBrushPanel.Instance.ShowPanel();
-        }
-
-        public void HidePanel()
-        {
-            // Hide panel
-            if (ForestBrushPanel.Instance.isVisible)
-            {
-                // Toggle main toolbar button
-                if (m_mainToolbarButton != null)
-                {
-                    m_mainToolbarButton.Disable();
-                }
-
-                // Just select default tool.
-                ToolsModifierControl.SetTool<DefaultTool>();
-
-                // Show panel
-                ForestBrushPanel.Instance.HidePanel();
-            }
-        }
-
-        public void TogglePanel()
-        {
-            if (ForestBrushPanel.Instance.isVisible)
-            {
-                HidePanel();
-            }
-            else
-            {
-                ShowPanel();
-            }
-        }
-
         public void UpdateToolbarButton()
         {
             if (m_Initialized)
             {
-                if (ModSettings.Settings.MainToolbarButton || !DependencyUtils.IsUnifiedUIRunning())
+                if (ModSettings.Settings.MainToolbarButton)
                 {
-                    if (m_mainToolbarButton == null)
-                    {
-                        m_mainToolbarButton = new MainToolbarButton();
-                    }
-
-                    m_mainToolbarButton.ShowButton();
+                    MainToolbarButton.Instance.ShowButton();
                 }
                 else
                 {
-                    m_mainToolbarButton.HideButton();
-                    m_mainToolbarButton = null;
+                    MainToolbarButton.Instance.HideButton();
                 }
             }
         }
@@ -434,7 +374,7 @@ namespace ForestBrushRevisited
 
                     if (ModSettings.Settings.ToggleTool.IsPressed(e))
                     {
-                        TogglePanel();
+                        ForestBrushPanel.Instance.TogglePanel();
                     }
                 }
                 

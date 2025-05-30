@@ -70,7 +70,7 @@ namespace ForestBrushRevisited.GUI
 
         private void CloseButton_eventClick(UIComponent component, UIMouseEventParameter eventParam)
         {
-            ForestBrush.Instance.HidePanel();
+            ForestBrushPanel.Instance.Hide();
         }
 
         public void SavePanelPosition()

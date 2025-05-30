@@ -18,6 +18,10 @@ namespace ForestBrushRevisited.GUI
         UILabel densityLabel;
         internal UISlider densitySlider;
 
+        private UIPanel m_panelSlope;
+        private UILabel m_labelSlope;
+        private UISlider m_sliderSlope;
+
         UIPanel layoutPanelAutoDensityReset;
         UIPanel layoutPanelAutoDensity;
         UIPanel layoutPanelReset;
@@ -33,6 +37,7 @@ namespace ForestBrushRevisited.GUI
             Setup();
             SetupSizePanel();
             SetupStrengthPanel();
+            SetupSlopePanel();
             SetupDensityPanel();
             SetupAutoDensityPanel();
 
@@ -187,6 +192,65 @@ namespace ForestBrushRevisited.GUI
             strengthSlider.RefreshTooltip();
         }
 
+        private void SetupSlopePanel()
+        {
+            int iSlopeLimit = ModSettings.Settings.SelectedBrush.Options.SlopeLimit;
+
+            m_panelSlope = AddUIComponent<UIPanel>();
+            m_panelSlope.size = new Vector2(width, 10);
+            m_panelSlope.autoLayout = true;
+            m_panelSlope.autoLayoutDirection = LayoutDirection.Horizontal;
+            m_panelSlope.autoFitChildrenHorizontally = true;
+            m_panelSlope.autoLayoutPadding = new RectOffset(10, 0, 0, 0);
+            m_panelSlope.zOrder = 2;
+
+            //size slider
+            m_labelSlope = m_panelSlope.AddUIComponent<UILabel>();
+            m_labelSlope.text = Localization.Get("sliderSlopeLimit");
+            m_labelSlope.textScale = Constants.UITextScale;
+            m_labelSlope.autoSize = false;
+            m_labelSlope.width = 80f;
+            m_labelSlope.disabledTextColor = new Color32(100, 100, 100, 255);
+            m_labelSlope.textAlignment = UIHorizontalAlignment.Left;
+            m_labelSlope.verticalAlignment = UIVerticalAlignment.Middle;
+            m_labelSlope.zOrder = 0;
+
+            m_sliderSlope = m_panelSlope.AddUIComponent<UISlider>();
+            m_sliderSlope.atlas = ResourceLoader.Atlas;
+            m_sliderSlope.size = new Vector2(400f - sizeLabel.width - 30f, 5f);
+            m_sliderSlope.color = new Color32(0, 0, 0, 255);
+            m_sliderSlope.disabledColor = new Color32(190, 190, 190, 255);
+            m_sliderSlope.minValue = 1f;
+            m_sliderSlope.maxValue = 100f;
+            m_sliderSlope.stepSize = 1f;
+            m_sliderSlope.value = iSlopeLimit;
+            m_sliderSlope.scrollWheelAmount = 1f;
+            m_sliderSlope.eventValueChanged += SlopeSlider_eventValueChanged;
+            m_sliderSlope.eventMouseUp += SlopeSlider_eventMouseUp;
+            m_sliderSlope.backgroundSprite = ResourceLoader.WhiteRect;
+            m_sliderSlope.tooltip = $"{iSlopeLimit}%";
+            m_sliderSlope.pivot = UIPivotPoint.TopLeft;
+            m_sliderSlope.zOrder = 1;
+
+            UISprite thumb = m_sliderSlope.AddUIComponent<UISprite>();
+            thumb.atlas = ResourceLoader.Atlas;
+            thumb.size = new Vector2(20, 20);
+            thumb.spriteName = ResourceLoader.IconPolicyForest;
+            m_sliderSlope.thumbObject = thumb;
+        }
+
+        private void SlopeSlider_eventValueChanged(UIComponent component, float value)
+        {
+            m_sliderSlope.tooltip = Math.Round(value) + "%";
+            m_sliderSlope.RefreshTooltip();
+            ModSettings.Settings.SelectedBrush.Options.SlopeLimit = (int)value;
+        }
+
+        private void SlopeSlider_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
+        {
+            ModSettings.Settings.Save();
+        }
+
         private void SetupDensityPanel()
         {
             layoutPanelDensity = AddUIComponent<UIPanel>();
@@ -195,7 +259,7 @@ namespace ForestBrushRevisited.GUI
             layoutPanelDensity.autoLayoutDirection = LayoutDirection.Horizontal;
             layoutPanelDensity.autoFitChildrenHorizontally = true;
             layoutPanelDensity.autoLayoutPadding = new RectOffset(10, 0, 0, 0);
-            layoutPanelDensity.zOrder = 2;
+            layoutPanelDensity.zOrder = 3;
 
             densityLabel = layoutPanelDensity.AddUIComponent<UILabel>();
             densityLabel.text = Localization.Get("FOREST-BRUSH-BRUSH-OPTIONS-DENSITY");
@@ -239,6 +303,7 @@ namespace ForestBrushRevisited.GUI
         {
             sizeSlider.value = options.Size;
             strengthSlider.value = options.Strength;
+            m_sliderSlope.value = options.SlopeLimit;
             densitySlider.value = 16f - options.Density;
         }
 
@@ -261,7 +326,7 @@ namespace ForestBrushRevisited.GUI
             layoutPanelAutoDensityReset.autoLayout = true;
             layoutPanelAutoDensityReset.autoLayoutDirection = LayoutDirection.Horizontal;
             layoutPanelAutoDensityReset.autoLayoutPadding = new RectOffset(0, 0, 0, 0);
-            layoutPanelAutoDensityReset.zOrder = 3;
+            layoutPanelAutoDensityReset.zOrder = 4;
 
             layoutPanelAutoDensity = layoutPanelAutoDensityReset.AddUIComponent<UIPanel>();
             layoutPanelAutoDensity.size = new Vector2(width / 2, 16);

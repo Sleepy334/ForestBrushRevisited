@@ -13,6 +13,31 @@ namespace ForestBrushRevisited.GUI
         private static readonly string kMainToolbarButtonTemplate = "MainToolbarButtonTemplate";
         private static readonly string kToggleButton = "ForestBrushRevisited";
 
+        // Instance object
+        private static MainToolbarButton? s_ToolbarButton = null;
+
+        // ----------------------------------------------------------------------------------------
+        public static MainToolbarButton Instance
+        {
+            get
+            {
+                if (s_ToolbarButton == null)
+                {
+                    s_ToolbarButton = new MainToolbarButton();
+                }
+
+                return s_ToolbarButton;
+            }
+        }
+
+        public static bool Exists
+        {
+            get
+            {
+                return s_ToolbarButton is not null;
+            }
+        }
+
         public UIButton ToggleButton => m_toggleButtonComponents.ToggleButton;
 
         public bool IsButtonAdded()
@@ -22,23 +47,24 @@ namespace ForestBrushRevisited.GUI
 
         public void AddToolButton()
         {
-            UITabstrip? tabstrip = GetMainToolStrip();
-            if (tabstrip != null)
+            if (ModSettings.Settings.MainToolbarButton)
             {
-                m_toggleButtonComponents = CreateToggleButtonComponents(tabstrip);
+                UITabstrip? tabstrip = GetMainToolStrip();
+                if (tabstrip != null)
+                {
+                    m_toggleButtonComponents = CreateToggleButtonComponents(tabstrip);
 
-                if (m_toggleButtonComponents != null)
-                {
-                    tabstrip.eventSelectedIndexChanged += OnSelectedIndexChanged;
-                }
-                else
-                {
-                    Debug.LogError("AddToolButton - Failed to create toolbar button.");
+                    if (m_toggleButtonComponents != null)
+                    {
+                        tabstrip.eventSelectedIndexChanged += OnSelectedIndexChanged;
+                    }
+                    else
+                    {
+                        Debug.LogError("AddToolButton - Failed to create toolbar button.");
+                    }
                 }
             }
         }
-
-        
 
         public void Enable()
         {
@@ -114,11 +140,11 @@ namespace ForestBrushRevisited.GUI
             {
                 if (IsToolbarButton(iSelectedIndex))
                 {
-                    ForestBrush.Instance.ShowPanel();
+                    ForestBrushPanel.Instance.Show();
                 }
                 else
                 {
-                    ForestBrush.Instance.HidePanel();
+                    ForestBrushPanel.Instance.Hide();
                 }
             }
         }

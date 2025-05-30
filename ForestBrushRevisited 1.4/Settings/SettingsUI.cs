@@ -17,6 +17,9 @@ namespace ForestBrushRevisited.Settings
         {
             try
             {
+                // Ensuire the setting shave been loaded.
+                ModSettings.Load();
+
                 // Title
                 UIComponent pnlMain = (UIComponent)helper.self;
                 UILabel txtTitle = AddDescription(pnlMain, "title", pnlMain, 1.0f, ForestBrushRevisitedMod.Title);
@@ -25,10 +28,12 @@ namespace ForestBrushRevisited.Settings
                 // Add tabstrip.
                 ExtUITabstrip tabStrip = ExtUITabstrip.Create(helper);
                 UIHelper tabGeneral = tabStrip.AddTabPage(Localization.Get("tabGeneral"), true);
+                UIHelper tabBehaviour = tabStrip.AddTabPage(Localization.Get("groupBehaviour"), true);
                 UIHelper tabSorting = tabStrip.AddTabPage(Localization.Get("tabSorting"), true);
                 UIHelper tabMainteanance = tabStrip.AddTabPage(Localization.Get("tabMaintenance"), true);
 
                 SetupGeneralTab(tabGeneral);
+                SetupBehaviourTab(tabBehaviour);
                 SetupSortingSearchingTab(tabSorting);
                 SetupMaintenanceTab(tabMainteanance);
             }
@@ -52,6 +57,14 @@ namespace ForestBrushRevisited.Settings
                 ModSettings.Settings.Save();
 
                 ForestBrush.Instance.UpdateToolbarButton();
+            });
+
+            groupGeneral.AddCheckbox("Add UnifiedUI button", ModSettings.Settings.AddUnifiedUIButton, (b) =>
+            {
+                ModSettings.Settings.AddUnifiedUIButton = b;
+                ModSettings.Settings.Save();
+
+                UnifiedUIButton.OnUnifiedToolbarButtonChanged();
             });
 
             // Interface
@@ -80,7 +93,10 @@ namespace ForestBrushRevisited.Settings
                 ModSettings.Settings.ShowTreeMeshData = b;
                 ModSettings.Settings.Save();
             });
+        }
 
+        private void SetupBehaviourTab(UIHelper helper)
+        {
             // Behaviour
             UIHelper groupBehaviour = helper.AddGroup(Localization.Get("groupBehaviour")) as UIHelper;
 

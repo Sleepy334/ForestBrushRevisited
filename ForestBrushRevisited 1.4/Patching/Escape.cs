@@ -19,7 +19,7 @@ namespace ForestBrushRevisted.Patching
             // Handle "Escape" in order of importance
             if (ForestBrushPanel.Instance.isVisible)
             {
-                ForestBrush.Instance.HidePanel();
+                ForestBrushPanel.Instance.Hide();
                 return false;
             }
 

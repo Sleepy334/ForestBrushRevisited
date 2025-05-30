@@ -1,4 +1,5 @@
-﻿using ForestBrushRevisted.Patching;
+﻿using ForestBrushRevisited.GUI;
+using ForestBrushRevisted.Patching;
 using ICities;
 using System.Collections.Generic;
 using UnityEngine;
@@ -90,6 +91,17 @@ namespace ForestBrushRevisited
                 }
                 
                 ForestBrush.Instance.Initialize();
+
+                // Add toolbar button
+                if (ModSettings.Settings.MainToolbarButton)
+                {
+                    MainToolbarButton.Instance.AddToolButton();
+                }
+                
+
+                // Add to unified UI if requested
+                UnifiedUIButton.Add();
+
                 s_loaded = true;
             }
 

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ColossalFramework;
 using ColossalFramework.Globalization;
 using ColossalFramework.UI;
-using Epic.OnlineServices.Lobby;
 using UnityEngine;
 
 namespace ForestBrushRevisited.GUI
@@ -40,15 +39,9 @@ namespace ForestBrushRevisited.GUI
             height = 850f;
             canFocus = true;
             isInteractive = true;
-            clipChildren = true;
             backgroundSprite = "SubcategoriesPanel";
             absolutePosition = new Vector3(ModSettings.Settings.PanelPosX, ModSettings.Settings.PanelPosY);
-            opacity = 0.95f;
             playAudioEvents = true;
-            eventVisibilityChanged += (c, e) =>
-            {
-                // TODO Update selection tool and main toolbar button as well
-            };
 
             // Add title
             TitleSection = AddUIComponent<TitleSection>();
@@ -93,18 +86,6 @@ namespace ForestBrushRevisited.GUI
 
             LocaleManager.eventLocaleChanged += ForestBrushPanel_eventLocaleChanged;
             Hide();
-        }
-
-        public void ShowPanel()
-        {
-            Show();
-            PlayClickSound(this);
-        }
-
-        public void HidePanel()
-        {
-            Hide();
-            PlayClickSound(this);
         }
 
         public void Destroy()
@@ -166,6 +147,57 @@ namespace ForestBrushRevisited.GUI
         {
             BrushShapeSelector.isVisible = !BrushShapeSelector.isVisible;
             return BrushShapeSelector.isVisible;
+        }
+
+        public void TogglePanel()
+        {
+            if (isVisible)
+            {
+                Hide();
+            }
+            else
+            {
+                Show();
+            }
+        }
+
+        protected override void OnVisibilityChanged()
+        {
+            PlayClickSound(this);
+
+            // Setup panel if we haven't already.
+            if (isVisible)
+            {
+                // Select tool
+                ToolsModifierControl.SetTool<ForestTool>();
+
+                if (MainToolbarButton.Exists)
+                {
+                    MainToolbarButton.Instance.Enable();
+                }
+
+                if (UnifiedUIButton.Exists)
+                {
+                    UnifiedUIButton.Instance.Enable();
+                }
+            }
+            else
+            {
+                // Deselect tool
+                ToolsModifierControl.SetTool<DefaultTool>();
+
+                if (MainToolbarButton.Exists)
+                {
+                    MainToolbarButton.Instance.Disable();
+                }
+
+                if (UnifiedUIButton.Exists)
+                {
+                    UnifiedUIButton.Instance.Disable();
+                }
+            }
+
+            base.OnVisibilityChanged();
         }
     }
 }

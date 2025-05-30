@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnifiedUI.Helpers;
 using UnityEngine;
 
 namespace ForestBrushRevisited
@@ -28,7 +27,7 @@ namespace ForestBrushRevisited
         private Vector3 BrushPosition;
         private Randomizer Randomizer;
         private static bool s_bLoadingTool = false;
-        private UIComponent? m_button = null;
+
         private float Size => Options.Size;
         private float Strength => Options.Strength;
         private float Density => Options.Density;
@@ -175,24 +174,30 @@ namespace ForestBrushRevisited
                     ToolsModifierControl.SetTool<DefaultTool>();
                 }
             }
+        }
 
-            if (DependencyUtils.IsUnifiedUIRunning())
+        private Mesh LoadBoxMesh()
+        {
+            Mesh boxMesh = null;
+            if (RenderManager.instance.OverlayEffect is not null)
             {
-                Texture2D? icon = TextureResources.LoadDllResource("ForestBrushNormal.png", 32, 32);
-                if (icon is null)
+                FieldInfo? info = RenderManager.instance.OverlayEffect.GetType().GetField("m_boxMesh", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (info is not null)
                 {
-                    Debug.LogError("Failed to load icon from resources");
-                    return;
+                    Mesh mesh = info.GetValue(RenderManager.instance.OverlayEffect) as Mesh;
+                    if (mesh is not null)
+                    {
+                        boxMesh = mesh;
+                    }
                 }
-
-                m_button = UUIHelpers.RegisterToolButton(
-                    name: "ForestBrushRevisited",
-                    groupName: null,
-                    tooltip: ForestBrushRevisitedMod.Title,
-                    tool: this,
-                    icon: icon,
-                    hotkeys: new UUIHotKeys { ActivationKey = ModSettings.Settings.ToggleTool });
             }
+
+            if (boxMesh is null)
+            {
+                Debug.Log($"ERROR: Unable to load BoxMesh.");
+            }
+
+            return boxMesh;
         }
 
         private Mesh LoadBoxMesh()
@@ -247,7 +252,7 @@ namespace ForestBrushRevisited
         protected override void OnEnable() {
             base.OnEnable();
 
-            ForestBrush.Instance.ShowPanel();
+            ForestBrushPanel.Instance.Show();
 
             if (!s_bLoadingTool)
             {
@@ -261,7 +266,7 @@ namespace ForestBrushRevisited
         protected override void OnDisable() {
             base.OnDisable();
 
-            ForestBrush.Instance.HidePanel();
+            ForestBrushPanel.Instance.Hide();
 
             SetBrush(string.Empty);
             MouseLeftDown = false;

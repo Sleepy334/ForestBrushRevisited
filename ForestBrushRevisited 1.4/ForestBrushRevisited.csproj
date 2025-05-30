@@ -118,11 +118,7 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="CitiesHarmony.Harmony">
-<<<<<<< Updated upstream
       <HintPath>..\..\Assemblies\CitiesHarmony.Harmony.dll</HintPath>
-=======
-      <HintPath>Assemblies\CitiesHarmony.Harmony.dll</HintPath>
->>>>>>> Stashed changes
     </Reference>
     <Reference Include="ColossalManaged">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\ColossalManaged.dll</HintPath>
@@ -131,7 +127,7 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\ICities.dll</HintPath>
     </Reference>
     <Reference Include="UnifiedUILib">
-      <HintPath>Assemblies\UnifiedUILib.dll</HintPath>
+      <HintPath>..\..\References\UnifiedUILib.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\UnityEngine.dll</HintPath>
